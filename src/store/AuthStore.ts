@@ -1,4 +1,5 @@
 import {
+  GoogleAuthProvider,
   TwitterAuthProvider,
   User,
   getAuth,
@@ -6,7 +7,6 @@ import {
   signOut,
 } from "firebase/auth";
 import { create } from "zustand";
-import { GoogleAuthProvider } from "firebase/auth";
 import firebaseApp from "@/firebase";
 import { FirebaseError } from "firebase/app";
 
@@ -26,7 +26,7 @@ enum selectPro {
 }
 
 // Interface for the store state
-interface StoreState {
+interface AuthStore {
   user: User | null;
   token: string | null;
   login: LoginFunction;
@@ -35,7 +35,7 @@ interface StoreState {
 }
 
 // Create the Zustand store
-export const useStore = create<StoreState>()((set) => ({
+export const useAuthStore = create<AuthStore>()((set) => ({
   user: null,
   token: null,
   login: async (selectProvider) => {
