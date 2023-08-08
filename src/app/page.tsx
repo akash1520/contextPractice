@@ -1,6 +1,9 @@
+import Features from "@/components/Features/Features";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
+import Internship from "@/components/Internship/Internship";
 import Navbar from "@/components/Navbar";
+import Testimonials from "@/components/Testimonials";
 
 // colors
 // primary: #feec01
@@ -13,9 +16,12 @@ import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
-    <main className="bg-[#F9FAFB] min-h-screen">
+    <main>
       <Navbar />
       <Hero />
+      <Features />
+      <Internship />
+      <Testimonials />
       <Footer />
     </main>
   );
