@@ -3,7 +3,11 @@
 import React, { useState } from "react";
 import { Menu, Close } from "@mui/icons-material";
 
-const Navbar = () => {
+type NavbarProps = {
+  onboarding?: boolean;
+};
+
+const Navbar = ({onboarding=true}:NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleMobileMenuToggle = () => {
@@ -30,12 +34,12 @@ const Navbar = () => {
             <a href="/contact" className="">
               CONTACT
             </a>
-            <a href="/login" className="">
+            {onboarding ? <><a href="/login" className="">
               SIGNIN
             </a>
-            <button className="px-8 py-1.5 text-black font-bold border-2 border-b-4 border-black bg-white transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none">
+            <a href="/register" className="px-8 py-1.5 text-black font-bold border-2 border-b-4 border-black bg-white transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none">
               Signup
-            </button>
+            </a></>:null}
           </div>
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center">
