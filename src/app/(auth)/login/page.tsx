@@ -12,6 +12,8 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useAuthStore } from "@/store/AuthStore";
 import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
+import AuthForm from "@/components/Authform/AuthForm";
 
 enum provider {
   Google,
@@ -34,29 +36,21 @@ const LoginPage = () => {
   };
 
   return (
+    <>
+    <Navbar onboarding={false} />
+    <AuthForm/>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Avatar className="m-4 bg-yellow-500">
-          <LockOutlinedIcon />
-        </Avatar>
+      <Box className="flex justify-center mt-2">
         <Button className="flex" onClick={() => login(provider.Google)}>
           <GoogleIcon className="mx-1" />
-          <Typography>Login With Google</Typography>
         </Button>
         <Button className="flex" onClick={() => login(provider.Twitter)}>
           <TwitterIcon className="mx-1" />
-          <Typography>Login With Twitter</Typography>
         </Button>
       </Box>
     </Container>
+    </>
   );
 };
 export default LoginPage;
