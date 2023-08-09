@@ -5,6 +5,8 @@ import Internship from "@/components/Internship/Internship";
 import Navbar from "@/components/Navbar";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "../components/FAQ/FAQ";
+import Mentor from "@/components/Mentor";
+import Mentee from "@/components/Mentee";
 
 // colors
 // primary: #feec01
@@ -22,6 +24,8 @@ export default function Home() {
       <Hero />
       <Features />
       <Internship />
+      <Mentee />
+      <Mentor />
       <Testimonials />
       <FAQ />
       <Footer />
