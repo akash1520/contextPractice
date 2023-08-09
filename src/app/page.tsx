@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import Internship from "@/components/Internship/Internship";
 import Navbar from "@/components/Navbar";
 import Testimonials from "@/components/Testimonials";
+import FAQ from "../components/FAQ/FAQ";
 
 // colors
 // primary: #feec01
@@ -22,6 +23,7 @@ export default function Home() {
       <Features />
       <Internship />
       <Testimonials />
+      <FAQ />
       <Footer />
     </main>
   );
