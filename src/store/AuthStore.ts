@@ -3,8 +3,10 @@ import {
   TwitterAuthProvider,
   User,
   getAuth,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  createUserWithEmailAndPassword
 } from "firebase/auth";
 import { create } from "zustand";
 import firebaseApp from "@/firebase";
@@ -16,8 +18,10 @@ const twitterProvider = new TwitterAuthProvider();
 
 // Define function types
 type LoginFunction = (selectProvider: number) => Promise<boolean>;
+type LoginWithEPFunction = (data:signupUser) => Promise<boolean>;
 type LogoutFunction = () => Promise<void>;
-type SignupFunction = (selectProvider: number) => Promise<void>;
+type SignupWithEPFunction = (data:signupUser) => Promise<void>;
+
 
 // Enumeration for different login providers
 enum selectPro {
@@ -30,8 +34,21 @@ interface AuthStore {
   user: User | null;
   token: string | null;
   login: LoginFunction;
+  loginEP:LoginWithEPFunction;
   logout: LogoutFunction;
-  signup: SignupFunction;
+  signupEP:SignupWithEPFunction;
+
+}
+
+interface signupUser {
+    firstName: string
+    lastName: string
+    mobileNumber: string
+    age: string
+    gender: string
+    email: string;
+    password:string
+    confirmPassword: string
 }
 
 // Create the Zustand store
@@ -83,16 +100,29 @@ export const useAuthStore = create<AuthStore>()((set) => ({
     }
     return false;
   },
+  loginEP: async (data) => {
+    const {email, password} = data;
+    try {
+        const result = await signInWithEmailAndPassword(auth, email, password);
+        const user = result.user;
+        const token = await user.getIdToken();
+        set(() => ({ user: user, token: token }));
+        return true;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+},
   logout: async () => {
     // Logout using Firebase Auth
     await signOut(auth);
   },
-  signup: async (selectProvider) => {
-    // Signup using the selected provider (Google or Twitter)
-    if (selectProvider === selectPro.Google) {
-      await signInWithPopup(auth, googleProvider);
-    } else if (selectProvider === selectPro.Twitter) {
-      await signInWithPopup(auth, twitterProvider);
-    }
-  },
+  signupEP:async(data)=>{
+    const {email, password} = data;
+    createUserWithEmailAndPassword(auth, email, password).then((res)=>{
+      console.log(res);
+    }).catch((err)=>{
+      console.error("firebase error: ", err);
+    })
+  }
 }));
