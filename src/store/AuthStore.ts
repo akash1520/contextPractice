@@ -120,7 +120,6 @@ export const useAuthStore = create<AuthStore>()((set) => ({
   signupEP:async(data)=>{
     const {email, password} = data;
     createUserWithEmailAndPassword(auth, email, password).then((res)=>{
-      console.log(res);
     }).catch((err)=>{
       console.error("firebase error: ", err);
     })
