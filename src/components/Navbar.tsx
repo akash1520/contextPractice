@@ -31,7 +31,7 @@ const Navbar = ({onboarding=true}:NavbarProps) => {
             <a href="/mentors" className="">
               MENTOR
             </a>
-            <a href="/contact" className="">
+            <a  href="/mentorsOnboarding" className="">
               CONTACT
             </a>
             {onboarding ? <><a href="/login" className="">
