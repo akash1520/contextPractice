@@ -7,6 +7,7 @@ import Testimonials from "@/components/Testimonials";
 import FAQ from "../components/FAQ/FAQ";
 import Mentor from "@/components/Mentor";
 import Mentee from "@/components/Mentee";
+import React from "react"
 
 // colors
 // primary: #feec01
