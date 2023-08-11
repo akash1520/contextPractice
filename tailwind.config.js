@@ -14,8 +14,9 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       fontFamily: {
-        gothic: ["League Gothic", "sans-serif"],
-        raleway: ["Raleway", "sans-serif"],
+        // defined in app/layout
+        gothic: ['var(--font-league-gothic)', 'sans-serif'],
+        raleway: ['var(--font-raleway)', 'sans-serif'],
       },
     },
   },
