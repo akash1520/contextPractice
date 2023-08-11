@@ -8,7 +8,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import Container from "@mui/material/Container";
 import { useAuthStore } from "@/store/AuthStore";
 import { useRouter } from "next/navigation";
-import AuthForm from "@/components/Authform/AuthForm";
+import AuthForm from "@/app/(auth)/components/Authform/AuthForm";
 import Image from "next/image";
 
 enum provider {
@@ -35,20 +35,28 @@ const LoginPage = () => {
           <h1 className="text-5xl text-center mb-2 font-semibold font-gothic tracking-wide text-[#feec01]">
             Welcome Back!
           </h1>
-          <p className="text-base text-center text-[#fefffe]">
+          <p className="text-sm text-center text-[#fefffe] font-raleway mb-12">
             Login to your account to continue upscaling your career with Mentea
           </p>
           <AuthForm />
           <Container component="main" maxWidth="xs">
             <CssBaseline />
-            <Box className="flex justify-center mt-2">
-              <Button className="flex" onClick={() => login(provider.Google)}>
-                <GoogleIcon className="mx-1" />
-              </Button>
-              <Button className="flex" onClick={() => login(provider.Twitter)}>
-                <TwitterIcon className="mx-1" />
-              </Button>
-            </Box>
+            <div className="flex mt-2 gap-3 text-[#fefffe]">
+              <button
+                className="flex flex-1 items-center px-3 py-2.5 border-2 border-[#1f1f1f] rounded-lg focus:outline-none gap-2"
+                onClick={() => login(provider.Google)}
+              >
+                <GoogleIcon className="mx-1 text-[#db4437]" />
+                <span className="text-sm">Login with Google</span>
+              </button>
+              <button
+                className="flex flex-1 items-center px-3 py-2.5 border-2 border-[#1f1f1f] rounded-lg focus:outline-none gap-2"
+                onClick={() => login(provider.Twitter)}
+              >
+                <TwitterIcon className="mx-1 text-[#1da1f2]" />
+                <span className="text-sm">Login with Twitter</span>
+              </button>
+            </div>
           </Container>
         </div>
       </div>

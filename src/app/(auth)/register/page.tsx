@@ -1,6 +1,8 @@
 import React, { Suspense } from "react";
 import Image from "next/image";
-const AuthForm = React.lazy(() => import("@/components/Authform/AuthForm"));
+const AuthForm = React.lazy(
+  () => import("@/app/(auth)/components/Authform/AuthForm")
+);
 
 const RegisterPage = () => {
   return (
