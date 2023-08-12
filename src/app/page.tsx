@@ -1,13 +1,13 @@
-import Features from "@/components/Features/Features";
-import Footer from "@/components/Footer";
-import Hero from "@/components/Hero";
-import Internship from "@/components/Internship/Internship";
-import Navbar from "@/components/Navbar";
-import Testimonials from "@/components/Testimonials";
-import FAQ from "../components/FAQ/FAQ";
-import Mentor from "@/components/Mentor";
-import Mentee from "@/components/Mentee";
-import React from "react"
+import Features from "@/app/components/Features/Features";
+import Footer from "@/app/components/Footer";
+import Hero from "@/app/components/Hero";
+import Internship from "@/app/components/Internship/Internship";
+import Navbar from "@/app/components/Navbar";
+import Testimonials from "@/app/components/Testimonials";
+import FAQ from "./components/FAQ/FAQ";
+import Mentor from "@/app/components/Mentor";
+import Mentee from "@/app/components/Mentee";
+import React from "react";
 
 // colors
 // primary: #feec01

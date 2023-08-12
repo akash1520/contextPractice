@@ -37,7 +37,7 @@ const Navbar = ({onboarding=true}:NavbarProps) => {
             {onboarding ? <><a href="/login" className="">
               SIGNIN
             </a>
-            <a href="/register" className="px-8 py-1.5 text-black font-bold border-2 border-b-4 border-black bg-white transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none">
+            <a href="/signup" className="px-8 py-1.5 text-black font-bold border-2 border-b-4 border-black bg-white transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none">
               Signup
             </a></>:null}
           </div>
@@ -71,7 +71,7 @@ const Navbar = ({onboarding=true}:NavbarProps) => {
             <a href="/login" className="block text-[#333333] py-2">
               Signin
             </a>
-            <a href="/register" className="block text-[#333333] py-2">
+            <a href="/signup" className="block text-[#333333] py-2">
               Signup
             </a>
           </div>
