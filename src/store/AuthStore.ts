@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { create } from "zustand";
 import firebaseApp from "@/firebase";
@@ -18,10 +18,9 @@ const twitterProvider = new TwitterAuthProvider();
 
 // Define function types
 type LoginFunction = (selectProvider: number) => Promise<boolean>;
-type LoginWithEPFunction = (data:signupUser) => Promise<boolean>;
+type LoginWithEPFunction = (data: signupUser) => Promise<boolean>;
 type LogoutFunction = () => Promise<void>;
-type SignupWithEPFunction = (data:signupUser) => Promise<void>;
-
+type SignupWithEPFunction = (data: signupUser) => Promise<void>;
 
 // Enumeration for different login providers
 enum selectPro {
@@ -34,30 +33,33 @@ interface AuthStore {
   user: User | null;
   token: string | null;
   login: LoginFunction;
-  loginEP:LoginWithEPFunction;
+  loginEP: LoginWithEPFunction;
   logout: LogoutFunction;
-  signupEP:SignupWithEPFunction;
-
+  signupEP: SignupWithEPFunction;
+  isLoading: boolean;
 }
 
 interface signupUser {
-    firstName: string
-    lastName: string
-    mobileNumber: string
-    age: string
-    gender: string
-    email: string;
-    password:string
-    confirmPassword: string
+  firstName: string;
+  lastName: string;
+  // mobileNumber: string
+  age: string;
+  gender: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
 }
 
 // Create the Zustand store
 export const useAuthStore = create<AuthStore>()((set) => ({
   user: null,
   token: null,
+  isLoading: false,
   login: async (selectProvider) => {
     if (selectProvider === selectPro.Google) {
       try {
+        set(() => ({ isLoading: true }));
+
         // Google login using Firebase Auth
         const result = await signInWithPopup(auth, googleProvider);
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -75,9 +77,13 @@ export const useAuthStore = create<AuthStore>()((set) => ({
           console.error(error);
         }
         return false;
+      } finally {
+        set(() => ({ isLoading: false }));
       }
     } else if (selectProvider === selectPro.Twitter) {
       try {
+        set(() => ({ isLoading: true }));
+
         // Twitter login using Firebase Auth
         const result = await signInWithPopup(auth, twitterProvider);
         const credential = TwitterAuthProvider.credentialFromResult(result);
@@ -96,32 +102,53 @@ export const useAuthStore = create<AuthStore>()((set) => ({
           console.error(error);
         }
         return false;
+      } finally {
+        set(() => ({ isLoading: false }));
       }
     }
     return false;
   },
   loginEP: async (data) => {
-    const {email, password} = data;
     try {
-        const result = await signInWithEmailAndPassword(auth, email, password);
-        const user = result.user;
-        const token = await user.getIdToken();
-        set(() => ({ user: user, token: token }));
-        return true;
+      set(() => ({ isLoading: true }));
+
+      const { email, password } = data;
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const user = result.user;
+      const token = await user.getIdToken();
+      set(() => ({ user: user, token: token }));
+      return true;
     } catch (err) {
-        console.log(err);
-        return false;
+      if (err instanceof FirebaseError) {
+        const errorCode = err.code;
+        if (errorCode === "auth/user-not-found") {
+          alert("No user found with this email");
+        } else if (errorCode === "auth/wrong-password") {
+          alert("Wrong password");
+        } else {
+          console.error(err);
+        }
+      } else {
+        console.error(err);
+      }
+      return false;
+    } finally {
+      set(() => ({ isLoading: false }));
     }
-},
+  },
   logout: async () => {
     // Logout using Firebase Auth
     await signOut(auth);
   },
-  signupEP:async(data)=>{
-    const {email, password} = data;
-    createUserWithEmailAndPassword(auth, email, password).then((res)=>{
-    }).catch((err)=>{
-      console.error("firebase error: ", err);
-    })
-  }
+  signupEP: async (data) => {
+    set(() => ({ isLoading: true }));
+    const { email, password } = data;
+    console.log("data", data);
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((res) => {})
+      .catch((err) => {
+        console.error("firebase error: ", err);
+      });
+    set(() => ({ isLoading: false }));
+  },
 }));
