@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import Image from "next/image";
 const AuthForm = React.lazy(() => import("@/app/(auth)/components/AuthForm"));
 
-const RegisterPage = () => {
+const SignupPage = () => {
   return (
     <>
       <div className="left md:w-7/12 w-full h-full p-6 flex flex-col items-center justify-center bg-[#191817] relative overflow-hidden overflow-y-auto">
@@ -34,4 +34,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default SignupPage;

@@ -211,7 +211,7 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
             </Grid>
           ) : (
             <Grid item>
-              <Link href="/register" variant="body2">
+              <Link href="/signup" variant="body2">
                 Don&#39;t have an account? Sign Up
               </Link>
             </Grid>

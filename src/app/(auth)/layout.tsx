@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
