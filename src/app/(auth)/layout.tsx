@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="w-screen h-screen flex items-center relative font-sans">
-      <div className="absolute top-[26px] left-5 z-20">
+      <div className="absolute top-[26px] left-5 z-50">
         <Link href="/">
           <span className="text-[#feec01] font-extrabold text-2xl">Mentea</span>
         </Link>

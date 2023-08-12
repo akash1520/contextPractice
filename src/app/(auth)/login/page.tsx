@@ -8,7 +8,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import Container from "@mui/material/Container";
 import { useAuthStore } from "@/store/AuthStore";
 import { useRouter } from "next/navigation";
-import AuthForm from "@/app/(auth)/components/Authform/AuthForm";
+import AuthForm from "@/app/(auth)/components/AuthForm";
 import Image from "next/image";
 
 enum provider {
