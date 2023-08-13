@@ -20,7 +20,7 @@ const twitterProvider = new TwitterAuthProvider();
 type LoginFunction = (selectProvider: number) => Promise<boolean>;
 type LoginWithEPFunction = (data: signupUser) => Promise<boolean>;
 type LogoutFunction = () => Promise<void>;
-type SignupWithEPFunction = (data: signupUser) => Promise<void>;
+type SignupWithEPFunction = (data: signupUser) => Promise<boolean>;
 
 // Enumeration for different login providers
 enum selectPro {
@@ -141,14 +141,37 @@ export const useAuthStore = create<AuthStore>()((set) => ({
     await signOut(auth);
   },
   signupEP: async (data) => {
-    set(() => ({ isLoading: true }));
-    const { email, password } = data;
-    console.log("data", data);
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((res) => {})
-      .catch((err) => {
-        console.error("firebase error: ", err);
-      });
-    set(() => ({ isLoading: false }));
+    try {
+      set(() => ({ isLoading: true }));
+
+      const { email, password } = data;
+      // Create user using Firebase Auth
+      await createUserWithEmailAndPassword(auth, email, password);
+
+      // Login user using Firebase Auth
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+
+      const token = await user.getIdToken();
+
+      set(() => ({ user: user, token: token }));
+
+      return true;
+    } catch (err) {
+      if (err instanceof FirebaseError) {
+        const errorCode = err.code;
+        if (errorCode === "auth/email-already-in-use") {
+          alert("Email already in use");
+        } else if (errorCode === "auth/invalid-email") {
+          alert("Invalid email");
+        } else {
+          console.error(err);
+        }
+      } else {
+        console.error(err);
+      }
+      return false;
+    } finally {
+      set(() => ({ isLoading: false }));
+    }
   },
 }));

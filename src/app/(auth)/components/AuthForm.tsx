@@ -2,7 +2,13 @@
 
 import React from "react";
 import { useFormik } from "formik";
-import { Container, Grid, CssBaseline, Link, CircularProgress } from "@mui/material";
+import {
+  Container,
+  Grid,
+  CssBaseline,
+  Link,
+  CircularProgress,
+} from "@mui/material";
 import { useAuthStore } from "@/store/AuthStore";
 import { useRouter } from "next/navigation";
 import AuthFormErr from "./AuthFormErr";
@@ -35,8 +41,10 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
-      if (isSignUp) signedUp({ ...values });
-      else {
+      if (isSignUp) {
+        const res = await signedUp({ ...values });
+        if (res) router.push("/");
+      } else {
         const res = await login({ ...values });
         if (res) router.push("/");
       }
@@ -45,7 +53,7 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
   });
 
   return (
-    <Container component="main" className="mt-2 text-center" maxWidth="xs">
+    <div className="mt-2 text-center">
       <CssBaseline />
       <form onSubmit={formik.handleSubmit} noValidate className="mt-1">
         <>
@@ -212,6 +220,6 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
           )}
         </Grid>
       </form>
-    </Container>
+    </div>
   );
 }
