@@ -11,8 +11,10 @@ import {
 import { create } from "zustand";
 import firebaseApp from "@/firebase";
 import { FirebaseError } from "firebase/app";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
 
 const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 const twitterProvider = new TwitterAuthProvider();
 
@@ -144,7 +146,8 @@ export const useAuthStore = create<AuthStore>()((set) => ({
     try {
       set(() => ({ isLoading: true }));
 
-      const { email, password } = data;
+      const { email, password, firstName, lastName, age, gender } = data;
+      
       // Create user using Firebase Auth
       await createUserWithEmailAndPassword(auth, email, password);
 
@@ -154,6 +157,19 @@ export const useAuthStore = create<AuthStore>()((set) => ({
       const token = await user.getIdToken();
 
       set(() => ({ user: user, token: token }));
+
+      // Store additional user data in Firestore
+      const userRef = doc(db, "Users", user.uid);
+
+      const userData = {
+        firstName,
+        lastName,
+        // Only add age and gender if it exists
+        ...(age !== null && { age }),
+        ...(gender !== null && { gender }),
+      };
+
+      await setDoc(userRef, userData);
 
       return true;
     } catch (err) {
