@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
-import Image from "next/image";
+import AuthImage from "../components/AuthImage";
+import AuthFormLoader from "../components/AuthFormLoader";
 const AuthForm = React.lazy(() => import("@/app/(auth)/components/AuthForm"));
 
 const SignupPage = () => {
@@ -15,20 +16,13 @@ const SignupPage = () => {
             Unlock your full potential with Mentea
           </p>
 
-          <Suspense fallback={<div>Loading AuthForm...</div>}>
+          <Suspense fallback={<><AuthFormLoader /></>}>
             <AuthForm isSignUp={true} />
           </Suspense>
         </div>
       </div>
       <div className="right md:block hidden w-5/12 h-full">
-        <Image
-          src={"https://picsum.photos/400/600?random=5&grayscale&blur=2"}
-          width="0"
-          height="0"
-          sizes="100vw"
-          className="w-full shadow-2xl opacity-50 h-full object-cover"
-          alt="sidebar image"
-        />
+        <AuthImage />
       </div>
     </>
   );

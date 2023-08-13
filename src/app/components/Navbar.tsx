@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Menu, Close } from "@mui/icons-material";
+import { useAuthStore } from "@/store/AuthStore";
 
 type NavbarProps = {
   onboarding?: boolean;
@@ -9,6 +10,9 @@ type NavbarProps = {
 
 const Navbar = ({onboarding=true}:NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const [user] = useAuthStore((state) => [state.user]);
+  console.log(user);
 
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);

@@ -2,7 +2,13 @@
 
 import React from "react";
 import { useFormik } from "formik";
-import { Container, Grid, CssBaseline, Link } from "@mui/material";
+import {
+  Container,
+  Grid,
+  CssBaseline,
+  Link,
+  CircularProgress,
+} from "@mui/material";
 import { useAuthStore } from "@/store/AuthStore";
 import { useRouter } from "next/navigation";
 import AuthFormErr from "./AuthFormErr";
@@ -17,14 +23,16 @@ type AuthFormProps = {
 export default function AuthForm({ isSignUp = false }: AuthFormProps) {
   const validationSchema = isSignUp ? signUpSchema : signInSchema;
   const router = useRouter();
-  const signedUp = useAuthStore((state) => state.signupEP);
-  const login = useAuthStore((state) => state.loginEP);
+  const [signedUp, login, isLoading] = useAuthStore((state) => [
+    state.signupEP,
+    state.loginEP,
+    state.isLoading,
+  ]);
 
   const formik = useFormik({
     initialValues: {
       firstName: "",
       lastName: "",
-      mobileNumber: "",
       age: "",
       gender: "",
       email: "",
@@ -33,8 +41,10 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
-      if (isSignUp) signedUp({ ...values });
-      else {
+      if (isSignUp) {
+        const res = await signedUp({ ...values });
+        if (res) router.push("/");
+      } else {
         const res = await login({ ...values });
         if (res) router.push("/");
       }
@@ -43,7 +53,7 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
   });
 
   return (
-    <Container component="main" className="mt-2 text-center" maxWidth="xs">
+    <div className="mt-2 text-center">
       <CssBaseline />
       <form onSubmit={formik.handleSubmit} noValidate className="mt-1">
         <>
@@ -81,26 +91,6 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
               />
             </div>
           )}
-          {/* {isSignUp && (
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="mobileNumber"
-              label="Mobile Number"
-              name="mobileNumber"
-              autoComplete="tel"
-              value={formik.values.mobileNumber}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.mobileNumber &&
-                Boolean(formik.errors.mobileNumber)
-              }
-              helperText={
-                formik.touched.mobileNumber && formik.errors.mobileNumber
-              }
-            />
-          )} */}
           <AuthFormInput
             id="email"
             label="Email"
@@ -143,6 +133,7 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
                   value={formik.values.gender}
                   onChange={formik.handleChange}
                   className={`px-4 py-2 bg-[#191817] text-[#fefffe] rounded-lg focus:outline-none border-2 border-[#1f1f1f] focus:border-[#fefffe] w-full`}
+                  id="gender"
                 >
                   <option aria-label="None" value="" />
                   <option value="male">Male</option>
@@ -197,10 +188,21 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
         </>
 
         <button
-          type="submit"
-          className="px-6 py-2 text-[#191817] font-bold border-2 border-b-4 border-[#1f1f1f] bg-[#fefffe] transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none mb-4 mt-3 flex items-center gap-2 w-full justify-center"
+          className={`px-6 py-2 text-[#191817] font-bold border-2 border-b-4 border-[#1f1f1f] bg-[#fefffe] transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none mb-4 mt-3 flex items-center gap-2 w-full justify-center ${
+            isLoading ? "opacity-50 pointer-events-none" : ""
+          }`}
+          disabled={isLoading}
         >
-          {isSignUp ? "Sign Up" : "Sign In"}
+          {isLoading ? (
+            <>
+              <CircularProgress size={20} style={{ color: "#191817" }} />
+              Loading...
+            </>
+          ) : isSignUp ? (
+            "Sign Up"
+          ) : (
+            "Sign In"
+          )}
         </button>
         <Grid container>
           {isSignUp ? (
@@ -218,6 +220,6 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
           )}
         </Grid>
       </form>
-    </Container>
+    </div>
   );
 }

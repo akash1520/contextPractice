@@ -1,15 +1,13 @@
 "use client";
-import * as React from "react";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
+
+import React, { Suspense } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import Container from "@mui/material/Container";
 import { useAuthStore } from "@/store/AuthStore";
 import { useRouter } from "next/navigation";
 import AuthForm from "@/app/(auth)/components/AuthForm";
-import Image from "next/image";
+import AuthImage from "../components/AuthImage";
+import AuthFormLoader from "../components/AuthFormLoader";
 
 enum provider {
   Google,
@@ -18,7 +16,7 @@ enum provider {
 
 const LoginPage = () => {
   const router = useRouter();
-  const [isLoggedIn, user] = useAuthStore((state) => [state.login, state.user]);
+  const [isLoggedIn] = useAuthStore((state) => [state.login]);
 
   const login = async (provider: provider) => {
     if (await isLoggedIn(provider)) {
@@ -38,37 +36,35 @@ const LoginPage = () => {
           <p className="text-sm text-center text-[#fefffe] font-raleway mb-12">
             Login to your account to continue upscaling your career with Mentea
           </p>
-          <AuthForm />
-          <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className="flex mt-2 gap-3 text-[#fefffe]">
-              <button
-                className="flex flex-1 items-center px-3 py-2.5 border-2 border-[#1f1f1f] rounded-lg focus:outline-none gap-2"
-                onClick={() => login(provider.Google)}
-              >
-                <GoogleIcon className="mx-1 text-[#db4437]" />
-                <span className="text-sm">Login with Google</span>
-              </button>
-              <button
-                className="flex flex-1 items-center px-3 py-2.5 border-2 border-[#1f1f1f] rounded-lg focus:outline-none gap-2"
-                onClick={() => login(provider.Twitter)}
-              >
-                <TwitterIcon className="mx-1 text-[#1da1f2]" />
-                <span className="text-sm">Login with Twitter</span>
-              </button>
-            </div>
-          </Container>
+          <Suspense
+            fallback={
+              <>
+                <AuthFormLoader />
+              </>
+            }
+          >
+            <AuthForm isSignUp={false} />
+          </Suspense>
+          <div className="flex mt-2 gap-3 text-[#fefffe]">
+            <button
+              className="flex flex-1 items-center px-3 py-2.5 border-2 border-[#1f1f1f] rounded-lg focus:outline-none gap-2"
+              onClick={() => login(provider.Google)}
+            >
+              <GoogleIcon className="mx-1 text-[#db4437]" />
+              <span className="text-sm">Login with Google</span>
+            </button>
+            <button
+              className="flex flex-1 items-center px-3 py-2.5 border-2 border-[#1f1f1f] rounded-lg focus:outline-none gap-2"
+              onClick={() => login(provider.Twitter)}
+            >
+              <TwitterIcon className="mx-1 text-[#1da1f2]" />
+              <span className="text-sm">Login with Twitter</span>
+            </button>
+          </div>
         </div>
       </div>
       <div className="right md:block hidden w-5/12 h-full">
-        <Image
-          src={"https://picsum.photos/400/600?random=5&grayscale&blur=2"}
-          width="0"
-          height="0"
-          sizes="100vw"
-          className="w-full shadow-2xl opacity-50 h-full object-cover"
-          alt="sidebar image"
-        />
+        <AuthImage />
       </div>
     </>
   );
