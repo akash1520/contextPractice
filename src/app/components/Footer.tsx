@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from 'next/link';
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import YouTubeIcon from "@mui/icons-material/YouTube";
@@ -37,16 +38,19 @@ const Footer = () => {
             </h2>
             <nav className="list-none mb-10 flex flex-col gap-4 mt-6">
               <li>
-                <a className="">First Link</a>
+              <Link href="/terms-and-conditions">Terms and Conditions</Link>
               </li>
               <li>
-                <a className="">Second Link</a>
+              <Link href="/privacy-policy">Privacy Policy</Link>
               </li>
               <li>
-                <a className="">Third Link</a>
+              <Link href="/cancellation-and-refund">Cancellation and Refund</Link>
               </li>
               <li>
-                <a className="">Fourth Link</a>
+              <Link href="/shipping-and-delivery">Shipping and Delivery</Link>
+              </li>
+              <li>
+              <Link href="/contact-us">Contact Us</Link>
               </li>
             </nav>
           </div>
