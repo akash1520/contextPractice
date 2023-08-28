@@ -7,11 +7,12 @@ import {
   signInWithPopup,
   signOut,
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { create } from "zustand";
 import firebaseApp from "@/firebase";
 import { FirebaseError } from "firebase/app";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
@@ -23,6 +24,8 @@ type LoginFunction = (selectProvider: number) => Promise<boolean>;
 type LoginWithEPFunction = (data: signupUser) => Promise<boolean>;
 type LogoutFunction = () => Promise<void>;
 type SignupWithEPFunction = (data: signupUser) => Promise<boolean>;
+type GetCurrentUserFunction = () => Promise<void>;
+type GetCurrentUserDataFunction = () => void;
 
 // Enumeration for different login providers
 enum selectPro {
@@ -34,11 +37,14 @@ enum selectPro {
 interface AuthStore {
   user: User | null;
   token: string | null;
+  userData: UserData | null;
   login: LoginFunction;
   loginEP: LoginWithEPFunction;
   logout: LogoutFunction;
   signupEP: SignupWithEPFunction;
   isLoading: boolean;
+  getCurrentUser: GetCurrentUserFunction;
+  getCurrentUserData: GetCurrentUserDataFunction;
 }
 
 interface signupUser {
@@ -52,11 +58,19 @@ interface signupUser {
   confirmPassword: string;
 }
 
+interface UserData {
+  firstName: string;
+  lastName: string;
+  age: string;
+  gender: string;
+}
+
 // Create the Zustand store
-export const useAuthStore = create<AuthStore>()((set) => ({
+export const useAuthStore = create<AuthStore>()((set, get) => ({
   user: null,
   token: null,
   isLoading: false,
+  userData: null,
   login: async (selectProvider) => {
     if (selectProvider === selectPro.Google) {
       try {
@@ -140,14 +154,26 @@ export const useAuthStore = create<AuthStore>()((set) => ({
   },
   logout: async () => {
     // Logout using Firebase Auth
-    await signOut(auth);
+    try {
+      set(() => ({ isLoading: true }));
+
+      await signOut(auth);
+
+      set(() => ({ user: null }));
+      set(() => ({ token: null }));
+      set(() => ({ userData: null }));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      set(() => ({ isLoading: false }));
+    }
   },
   signupEP: async (data) => {
     try {
       set(() => ({ isLoading: true }));
 
       const { email, password, firstName, lastName, age, gender } = data;
-      
+
       // Create user using Firebase Auth
       await createUserWithEmailAndPassword(auth, email, password);
 
@@ -188,6 +214,47 @@ export const useAuthStore = create<AuthStore>()((set) => ({
       return false;
     } finally {
       set(() => ({ isLoading: false }));
+    }
+  },
+  getCurrentUser: async () => {
+    try {
+      set({ isLoading: true });
+
+      await new Promise<void>((resolve) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          unsubscribe();
+          
+          if (user) {
+            set({ user: user });
+          } else {
+            set({ user: null });
+          }
+
+          resolve();
+        });
+      });
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      set({ user: null });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  getCurrentUserData: async () => {
+    // get the current user id
+    const uid = get().user?.uid;
+
+    // fetch the current user data
+    if (uid) {
+      const userRef = doc(db, "Users", uid);
+      const docSnap = await getDoc(userRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data() as UserData;
+        set(() => ({ userData: data }));
+      } else {
+        set(() => ({ userData: null }));
+      }
     }
   },
 }));
