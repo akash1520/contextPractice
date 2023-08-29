@@ -7,14 +7,17 @@ import { useAuthStore } from "@/store/AuthStore";
 import NavbarMenu from "./NavbarMenu";
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
+import MobileNavbar from "./MobileNavbar";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const [user, getCurrentUser, isLoading] = useAuthStore((state) => [
+  const [user, getCurrentUser, isLoading, userData, getCurrentUserData] = useAuthStore((state) => [
     state.user,
     state.getCurrentUser,
     state.isLoading,
+    state.userData,
+    state.getCurrentUserData,
   ]);
 
   const handleMobileMenuToggle = () => {
@@ -30,15 +33,15 @@ const Navbar = () => {
       }
     };
 
-    if (!user) {
+    if (!user || !userData) {
       fetchUser();
     }
   }, [user]);
 
   return (
     <nav className="bg-[#feec01] h-[78px]">
-      <div className="max-w-7xl p-5 mx-auto">
-        <div className="flex items-center justify-between">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between p-5">
           <div className="flex items-center">
             <span className="text-[#191817] font-extrabold text-2xl">
               Mentea
@@ -86,23 +89,7 @@ const Navbar = () => {
         </div>
         {/* Mobile Menu Content */}
         {isMobileMenuOpen && (
-          <div className="md:hidden mt-2">
-            <Link href="/" className="block text-[#333333] py-2">
-              Home
-            </Link>
-            <Link href="/mentors" className="block text-[#333333] py-2">
-              Mentor
-            </Link>
-            <Link href="/contact" className="block text-[#333333] py-2">
-              Contact
-            </Link>
-            <Link href="/login" className="block text-[#333333] py-2">
-              Signin
-            </Link>
-            <Link href="/signup" className="block text-[#333333] py-2">
-              Signup
-            </Link>
-          </div>
+          <MobileNavbar handleMobileMenuToggle={handleMobileMenuToggle} />
         )}
       </div>
     </nav>

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { Logout } from "@mui/icons-material";
 import { useAuthStore } from "@/store/AuthStore";
+import { getAvatarInitials } from "./utils";
 
 const NavbarMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -16,39 +17,10 @@ const NavbarMenu = () => {
     setAnchorEl(null);
   };
 
-  const [userData, getCurrentUserData, logout] = useAuthStore((state) => [
+  const [userData, logout] = useAuthStore((state) => [
     state.userData,
-    state.getCurrentUserData,
     state.logout,
   ]);
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        await getCurrentUserData();
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
-    if (!userData) {
-      fetchCurrentUser();
-    }
-  }, [userData]);
-
-  const getAvatarInitials = (firstName: string, lastName: string): string => {
-    let initials = "";
-
-    if (firstName && lastName) {
-      initials = firstName.charAt(0) + lastName.charAt(0);
-    } else if (firstName) {
-      initials = firstName.charAt(0);
-    } else if (lastName) {
-      initials = lastName.charAt(0);
-    }
-
-    return initials.toUpperCase();
-  };
 
   const handleLogout = () => {
     logout();
@@ -59,15 +31,20 @@ const NavbarMenu = () => {
 
   return (
     <>
-      <button
-        className="ml-2 p-1.5 text-black font-bold border-2 border-b-4 border-black bg-white transition-transform duration-200 transform active:translate-y-[1px] active:border-b-1 shadow-md rounded-full outline-none focus:outline-none"
-        onClick={handleClick}
-        aria-controls={open ? "profile-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-      >
-        {getAvatarInitials(userData?.firstName || "", userData?.lastName || "")}
-      </button>
+      {userData && (
+        <button
+          className="ml-2 p-1.5 text-black font-bold border-2 border-b-4 border-black bg-white transition-transform duration-200 transform active:translate-y-[1px] active:border-b-1 shadow-md rounded-full outline-none focus:outline-none"
+          onClick={handleClick}
+          aria-controls={open ? "profile-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+        >
+          {getAvatarInitials(
+            userData?.firstName || "",
+            userData?.lastName || ""
+          )}
+        </button>
+      )}
       <Menu
         anchorEl={anchorEl}
         id="profile-menu"

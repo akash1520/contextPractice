@@ -226,6 +226,9 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
           
           if (user) {
             set({ user: user });
+
+            get().getCurrentUserData();
+
           } else {
             set({ user: null });
           }
