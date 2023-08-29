@@ -37,8 +37,10 @@ const Mentor = () => {
             <Image
               src="https://picsum.photos/400/600?random=2&grayscale&blur=2"
               alt="mentor"
-              layout="fill"
-              objectFit="cover"
+              fill={true}
+              style={{
+                objectFit: "cover",
+              }}
             />
           </div>
         </div>

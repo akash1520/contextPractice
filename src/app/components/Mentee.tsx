@@ -13,8 +13,10 @@ const Mentee = () => {
             <Image
               src="https://picsum.photos/400/600?random=1&grayscale&blur=2"
               alt="mentee"
-              layout="fill"
-              objectFit="cover"
+              fill={true}
+              style={{
+                objectFit: "cover",
+              }}
             />
           </div>
           {/* right side */}

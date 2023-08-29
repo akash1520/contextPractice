@@ -18,7 +18,14 @@ const InternshipCard = ({
   return (
     <div className="rounded-2xl shadow-md overflow-hidden border-2 border-b-4 border-black max-w-xs min-h-[400px] mx-auto md:mx-0 font-raleway text-[#191817]">
       <div className="h-40 relative">
-        <Image src={imageSrc} alt={heading} layout="fill" objectFit="cover" />
+        <Image
+          src={imageSrc}
+          alt={heading}
+          fill={true}
+          style={{
+            objectFit: "cover",
+          }}
+        />
       </div>
       <div className="flex flex-col justify-between p-6">
         <div className="">
