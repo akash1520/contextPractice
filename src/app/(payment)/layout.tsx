@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import React from "react";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Footer from "../components/Footer/Footer";
 
 // auth page metadata for mentea
 export const metadata: Metadata = {
@@ -12,11 +12,11 @@ export const metadata: Metadata = {
 const PayLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-    <Navbar/>
-    <main className="w-full h-full bg-[#feec01] flex items-center relative font-sans">
-      {children}
-    </main>
-    <Footer/>
+      <Navbar />
+      <main className="w-full h-full bg-[#feec01] flex items-center relative font-sans">
+        {children}
+      </main>
+      <Footer />
     </>
   );
 };

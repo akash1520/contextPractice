@@ -1,5 +1,5 @@
 import Features from "@/app/components/Features/Features";
-import Footer from "@/app/components/Footer";
+import Footer from "@/app/components/Footer/Footer";
 import Hero from "@/app/components/Hero";
 import Internship from "@/app/components/Internship/Internship";
 import Navbar from "@/app/components/Navbar";
