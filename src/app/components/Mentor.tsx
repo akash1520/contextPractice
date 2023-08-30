@@ -2,6 +2,7 @@ import React from "react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Image from "next/image";
 import { Balancer } from "react-wrap-balancer";
+import Link from "next/link";
 
 const Mentor = () => {
   return (
@@ -24,9 +25,9 @@ const Mentor = () => {
             </p>
 
             <div className="flex items-center mt-10 gap-4">
-              <button className="px-6 py-2 text-black font-bold border-2 border-b-4 border-black bg-[#feec01] transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none mb-4 flex items-center gap-2">
+              <Link href="/mentorsOnboarding" className="px-6 py-2 text-black font-bold border-2 border-b-4 border-black bg-[#feec01] transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none mb-4 flex items-center gap-2">
                 Apply Now <ArrowForwardIosIcon fontSize="small" />
-              </button>
+              </Link>
               <button className="px-6 py-2 text-black font-bold border-2 border-b-4 border-black bg-white transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none mb-4 flex items-center gap-2">
                 Learn More
               </button>
@@ -35,7 +36,7 @@ const Mentor = () => {
           {/* right side */}
           <div className="flex justify-center items-center relative rounded-3xl overflow-hidden min-h-[300px]">
             <Image
-              src="https://picsum.photos/400/600?random=2&grayscale&blur=2"
+              src="/images/gos.png"
               alt="mentor"
               fill={true}
               style={{

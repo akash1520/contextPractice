@@ -1,23 +1,22 @@
 import React from "react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import Image from "next/image";
 import { Balancer } from "react-wrap-balancer";
+import dynamic from "next/dynamic";
 
 const Mentee = () => {
+
+  const DynamicVideoComponent = dynamic(
+    () => import('../components/VideoComponent'),
+    { ssr: false }  // This will only render the component on client-side
+  );
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="pt-12 pb-0 md:py-20 px-5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 justify-center max-w-5xl mx-auto">
           {/* left side */}
           <div className="flex justify-center items-center relative rounded-3xl overflow-hidden min-h-[300px]">
-            <Image
-              src="https://picsum.photos/400/600?random=1&grayscale&blur=2"
-              alt="mentee"
-              fill={true}
-              style={{
-                objectFit: "cover",
-              }}
-            />
+           <DynamicVideoComponent/>
           </div>
           {/* right side */}
           <div className="flex flex-col justify-center">
