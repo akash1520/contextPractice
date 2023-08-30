@@ -38,8 +38,10 @@ const Mentor = () => {
             <Image
               src="/images/gos.png"
               alt="mentor"
-              layout="fill"
-              objectFit="cover"
+              fill={true}
+              style={{
+                objectFit: "cover",
+              }}
             />
           </div>
         </div>
