@@ -35,7 +35,7 @@ const Mentor = () => {
           {/* right side */}
           <div className="flex justify-center items-center relative rounded-3xl overflow-hidden min-h-[300px]">
             <Image
-              src="https://picsum.photos/400/600?random=2&grayscale&blur=2"
+              src="/images/gos.png"
               alt="mentor"
               layout="fill"
               objectFit="cover"

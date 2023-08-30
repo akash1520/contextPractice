@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import Balancer from "react-wrap-balancer";
 
@@ -22,9 +23,9 @@ const Hero = () => {
               <button className="md:w-[250px] px-12 py-2 text-black font-bold border-2 border-b-4 border-black bg-white transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none">
                 Find a Mentor
               </button>
-              <button className="md:w-[250px] px-12 py-2 text-black font-bold border-2 border-b-4 border-black transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none">
+              <Link href="/mentorsOnboarding" className="md:w-[250px] px-12 py-2 text-black font-bold border-2 border-b-4 border-black transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none">
                 Become a Mentor
-              </button>
+              </Link>
             </div>
           </div>
         </div>
