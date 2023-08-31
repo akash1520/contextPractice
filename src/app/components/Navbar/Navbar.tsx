@@ -59,7 +59,7 @@ const Navbar = () => {
                 <Link href="/login">SIGNIN</Link>
                 <Link
                   href="/signup"
-                  className={`flex items-center gap-2 px-8 py-1.5 text-black font-bold border-2 border-b-4 border-black bg-white transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none ${
+                  className={`btn px-8 py-1.5 bg-white  ${
                     isLoading ? "opacity-80 cursor-not-allowed" : ""
                   }`}
                 >

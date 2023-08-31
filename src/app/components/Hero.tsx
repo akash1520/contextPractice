@@ -20,10 +20,13 @@ const Hero = () => {
               </Balancer>
             </p>
             <div className="flex flex-wrap gap-8 md:justify-center mt-10">
-              <button className="md:w-[250px] px-12 py-2 text-black font-bold border-2 border-b-4 border-black bg-white transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none">
+              <button className="btn md:w-[250px] px-12 py-2 bg-white justify-center">
                 Find a Mentor
               </button>
-              <Link href="/mentorsOnboarding" className="md:w-[250px] px-12 py-2 text-black font-bold border-2 border-b-4 border-black transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none">
+              <Link
+                href="/mentorsOnboarding"
+                className="btn md:w-[250px] px-12 py-2 "
+              >
                 Become a Mentor
               </Link>
             </div>
