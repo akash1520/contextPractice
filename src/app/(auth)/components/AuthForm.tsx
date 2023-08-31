@@ -233,23 +233,25 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
           )}
         </>
 
-        <button
-          className={`px-6 py-2 text-[#191817] font-bold border-2 border-b-4 border-[#1f1f1f] bg-[#fefffe] transition-transform duration-200 transform hover:translate-y-[-2px] active:translate-y-[1px] active:border-b-1 shadow-md rounded-full focus:outline-none mb-4 mt-3 flex items-center gap-2 w-full justify-center ${
-            isLoading ? "opacity-50 pointer-events-none" : ""
-          }`}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <>
-              <CircularProgress size={20} style={{ color: "#191817" }} />
-              Loading...
-            </>
-          ) : isSignUp ? (
-            "Sign Up"
-          ) : (
-            "Sign In"
-          )}
-        </button>
+        <div className="my-4">
+          <button
+            className={`btn bg-white w-full justify-center ${
+              isLoading ? "opacity-50 pointer-events-none" : ""
+            }`}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <CircularProgress size={20} style={{ color: "#191817" }} />
+                Loading...
+              </>
+            ) : isSignUp ? (
+              "Sign Up"
+            ) : (
+              "Sign In"
+            )}
+          </button>
+        </div>
         <Grid container>
           {isSignUp ? (
             <Grid item xs>
