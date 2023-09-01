@@ -10,21 +10,18 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { create } from "zustand";
-import firebaseApp from "@/firebase";
+import { auth, db } from "@/firebase";
 import { FirebaseError } from "firebase/app";
 import {
   collection,
   doc,
   getDoc,
   getDocs,
-  getFirestore,
   query,
   setDoc,
   where,
 } from "firebase/firestore";
 
-const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 const twitterProvider = new TwitterAuthProvider();
 
@@ -67,14 +64,6 @@ interface signupUser {
   email: string;
   password: string;
   confirmPassword: string;
-}
-
-interface UserData {
-  firstName: string;
-  lastName: string;
-  username: string;
-  age: string;
-  gender: string;
 }
 
 // Create the Zustand store

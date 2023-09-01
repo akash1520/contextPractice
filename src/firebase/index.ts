@@ -1,4 +1,6 @@
 import { getApps, initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -14,4 +16,6 @@ const firebaseConfig = {
 const firebaseApp =
   // create a new app only if it doesn't already exists
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-export default firebaseApp;
+
+export const auth = getAuth(firebaseApp);
+export const db = getFirestore(firebaseApp);

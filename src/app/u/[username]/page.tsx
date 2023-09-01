@@ -1,19 +1,18 @@
-import apiEndpoint from "@/utils/apiEndpoint";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import UserProfile from "./components/UserProfile";
+import { db } from "@/firebase";
 
 interface UserPageProps {
   params: {
     username: string;
   };
-}
-
-interface UserData {
-  firstName: string;
-  lastName: string;
-  username: string;
-  age?: number;
-  gender?: string;
 }
 
 export async function generateMetadata({
@@ -26,7 +25,7 @@ export async function generateMetadata({
   if (!user) {
     return {
       title: "User Not Found",
-    }
+    };
   }
 
   return {
@@ -35,13 +34,15 @@ export async function generateMetadata({
 }
 
 const getUserData = async (username: string) => {
-  const response = await fetch(`${apiEndpoint}/u/${username}`);
+  const usersCollectionRef = collection(db, "Users");
+  const q = query(usersCollectionRef, where("username", "==", username));
+  const querySnapshot = await getDocs(q);
 
-  if (!response.ok) {
+  if (querySnapshot.empty) {
     return undefined;
   }
 
-  const user = (await response.json()) as UserData;
+  const user = querySnapshot.docs[0].data() as UserData;
 
   return user;
 };
@@ -55,17 +56,7 @@ const UserPage = async ({ params }: UserPageProps) => {
     notFound();
   }
 
-  return (
-    <div>
-      <h2>User Profile</h2>
-
-      <p>First Name: {user.firstName}</p>
-      <p>Last Name: {user.lastName}</p>
-      <p>Username: {user.username}</p>
-      {user.age && <p>Age: {user.age}</p>}
-      {user.gender && <p>Gender: {user.gender}</p>}
-    </div>
-  );
+  return <UserProfile user={user} />;
 };
 
 export default UserPage;
