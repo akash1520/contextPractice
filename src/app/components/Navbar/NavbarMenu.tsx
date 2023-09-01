@@ -2,9 +2,11 @@
 
 import React, { useState } from "react";
 import { ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { Logout } from "@mui/icons-material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
 import { useAuthStore } from "@/store/AuthStore";
 import { getAvatarInitials } from "./utils";
+import Link from "next/link";
 
 const NavbarMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -33,7 +35,7 @@ const NavbarMenu = () => {
     <>
       {userData && (
         <button
-          className="ml-2 p-1.5 text-black font-bold border-2 border-b-4 border-black bg-white transition-transform duration-200 transform active:translate-y-[1px] active:border-b-1 shadow-md rounded-full outline-none focus:outline-none"
+          className="btn ml-2 p-1.5 bg-white"
           onClick={handleClick}
           aria-controls={open ? "profile-menu" : undefined}
           aria-haspopup="true"
@@ -55,9 +57,17 @@ const NavbarMenu = () => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         className="mt-2"
       >
+        <Link href={`/u/${userData?.username}`}>
+          <MenuItem>
+            <ListItemIcon>
+              <PersonIcon fontSize="small" />
+            </ListItemIcon>
+            Profile
+          </MenuItem>
+        </Link>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
-            <Logout fontSize="small" />
+            <LogoutIcon fontSize="small" />
           </ListItemIcon>
           Logout
         </MenuItem>

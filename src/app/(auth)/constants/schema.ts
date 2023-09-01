@@ -14,6 +14,9 @@ export const signInSchema = Yup.object({
 export const signUpSchema = Yup.object({
   firstName: Yup.string().required("Required"),
   lastName: Yup.string().required("Required"),
+  username: Yup.string()
+    .required("Required")
+    .min(5, "Username must be at least 5 characters"),
   age: Yup.number().positive().integer(),
   gender: Yup.string(),
   email: Yup.string().email("Invalid email format").required("Required"),

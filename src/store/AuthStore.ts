@@ -10,12 +10,18 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { create } from "zustand";
-import firebaseApp from "@/firebase";
+import { auth, db } from "@/firebase";
 import { FirebaseError } from "firebase/app";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 
-const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 const twitterProvider = new TwitterAuthProvider();
 
@@ -26,6 +32,7 @@ type LogoutFunction = () => Promise<void>;
 type SignupWithEPFunction = (data: signupUser) => Promise<boolean>;
 type GetCurrentUserFunction = () => Promise<void>;
 type GetCurrentUserDataFunction = () => void;
+type CheckUsernameAvailabilityFunction = (username: string) => Promise<boolean>;
 
 // Enumeration for different login providers
 enum selectPro {
@@ -45,24 +52,18 @@ interface AuthStore {
   isLoading: boolean;
   getCurrentUser: GetCurrentUserFunction;
   getCurrentUserData: GetCurrentUserDataFunction;
+  checkUsernameAvailability: CheckUsernameAvailabilityFunction;
 }
 
 interface signupUser {
   firstName: string;
   lastName: string;
-  // mobileNumber: string
+  username: string;
   age: string;
   gender: string;
   email: string;
   password: string;
   confirmPassword: string;
-}
-
-interface UserData {
-  firstName: string;
-  lastName: string;
-  age: string;
-  gender: string;
 }
 
 // Create the Zustand store
@@ -172,7 +173,7 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
     try {
       set(() => ({ isLoading: true }));
 
-      const { email, password, firstName, lastName, age, gender } = data;
+      const { email, password, firstName, lastName, username, age, gender } = data;
 
       // Create user using Firebase Auth
       await createUserWithEmailAndPassword(auth, email, password);
@@ -190,6 +191,7 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
       const userData = {
         firstName,
         lastName,
+        username,
         // Only add age and gender if it exists
         ...(age !== null && { age }),
         ...(gender !== null && { gender }),
@@ -223,12 +225,11 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
       await new Promise<void>((resolve) => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
           unsubscribe();
-          
+
           if (user) {
             set({ user: user });
 
             get().getCurrentUserData();
-
           } else {
             set({ user: null });
           }
@@ -258,6 +259,18 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
       } else {
         set(() => ({ userData: null }));
       }
+    }
+  },
+  checkUsernameAvailability: async (username: string) => {
+    try {
+      const userRef = collection(db, "Users");
+      const q = query(userRef, where("username", "==", username));
+      const querySnapshot = await getDocs(q);
+
+      return querySnapshot.empty; // If empty, username is available
+    } catch (error) {
+      console.error("Error checking username availability:", error);
+      throw error;
     }
   },
 }));

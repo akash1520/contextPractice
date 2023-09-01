@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import {
   Container,
@@ -23,16 +23,22 @@ type AuthFormProps = {
 export default function AuthForm({ isSignUp = false }: AuthFormProps) {
   const validationSchema = isSignUp ? signUpSchema : signInSchema;
   const router = useRouter();
-  const [signedUp, login, isLoading] = useAuthStore((state) => [
-    state.signupEP,
-    state.loginEP,
-    state.isLoading,
-  ]);
+  const [signedUp, login, isLoading, checkUsernameAvailability] = useAuthStore(
+    (state) => [
+      state.signupEP,
+      state.loginEP,
+      state.isLoading,
+      state.checkUsernameAvailability,
+    ]
+  );
+  const [checkingUsername, setCheckingUsername] = useState(false);
+  const [isUsernameAvailable, setIsUsernameAvailable] = useState(false);
 
   const formik = useFormik({
     initialValues: {
       firstName: "",
       lastName: "",
+      username: "",
       age: "",
       gender: "",
       email: "",
@@ -43,6 +49,7 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
     onSubmit: async (values, { resetForm }) => {
       if (isSignUp) {
         const res = await signedUp({ ...values });
+        setIsUsernameAvailable(false);
         if (res) router.push("/");
       } else {
         const res = await login({ ...values });
@@ -51,6 +58,27 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
       resetForm();
     },
   });
+
+  const handleUsernameBlur = async () => {
+    if (formik.values.username.length < 5) return;
+
+    try {
+      setCheckingUsername(true);
+
+      const username = formik.values.username;
+      const isUsernameAvailable = await checkUsernameAvailability(username)
+
+      if (!isUsernameAvailable) {
+        formik.setFieldError("username", "Username is not available");
+      }
+
+      setIsUsernameAvailable(isUsernameAvailable);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setCheckingUsername(false);
+    }
+  };
 
   return (
     <div className="mt-2 text-center">
@@ -106,6 +134,24 @@ export default function AuthForm({ isSignUp = false }: AuthFormProps) {
             }
             errorMessage={formik.touched.email && formik.errors.email}
           />
+
+          {isSignUp && (
+            <AuthFormInput
+              label="Username"
+              id="username"
+              name="username"
+              placeholder="Username"
+              value={formik.values.username}
+              onChange={formik.handleChange}
+              errorCondition={formik.errors.username === "Username is not available" || (formik.touched.username && Boolean(formik.errors.username))}
+              errorMessage={formik.errors.username}
+              required={true}
+              onBlur={handleUsernameBlur}
+              loader={true}
+              loading={checkingUsername}
+              loadingFeedback={isUsernameAvailable}
+            />
+          )}
 
           {isSignUp && (
             <div className="flex p-0 gap-2">

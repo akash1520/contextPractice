@@ -3,6 +3,7 @@ import React from "react";
 import { getAvatarInitials } from "./utils";
 import MobileNavbarMenuItem from "./MobileNavbarMenuItem";
 import { mobileNavbarMenuItems } from "./constants/mobileNavbarMenuItems";
+import Link from "next/link";
 
 interface MobileNavbarProps {
   handleMobileMenuToggle: () => void;
@@ -29,14 +30,14 @@ const MobileNavbar = ({ handleMobileMenuToggle }: MobileNavbarProps) => {
           </div>
           {user && (
             <div className="flex gap-2">
-              <div className="p-1.5 text-black font-bold border-2 border-black bg-white transition-transform duration-200 transform shadow-md rounded-full">
+              <Link href={`/u/${userData?.username}`} className="btn p-1.5 bg-white">
                 <span>
                   {getAvatarInitials(
                     userData?.firstName || "",
                     userData?.lastName || ""
                   )}
                 </span>
-              </div>
+              </Link>
 
               <span className="font-semibold text-lg">
                 {userData?.firstName} {userData?.lastName}
