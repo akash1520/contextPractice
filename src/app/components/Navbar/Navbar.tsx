@@ -36,7 +36,7 @@ const Navbar = () => {
     if (!user || !userData) {
       fetchUser();
     }
-  }, [user]);
+  }, [user, userData, getCurrentUser]);
 
   return (
     <nav className="bg-[#feec01] h-[78px]">
