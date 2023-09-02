@@ -16,7 +16,7 @@ const InternshipCard = ({
   buttonText,
 }: InternshipCardProps) => {
   return (
-    <div className="rounded-2xl shadow-md overflow-hidden border-2 border-b-4 border-black max-w-xs min-h-[400px] mx-auto md:mx-0 font-raleway text-[#191817] flex flex-col">
+    <div className="card flex flex-col">
       <div className="h-40 relative">
         <Image
           src={imageSrc}
