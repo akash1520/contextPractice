@@ -14,6 +14,7 @@ interface MentorFormProps{
 
 export default function MentorForm({onClose}:MentorFormProps) {
   const [socialsError, setSocialsError] = React.useState<string | null>(null);
+
   const router = useRouter()
   const formik = useFormik({
     initialValues: {
@@ -30,10 +31,14 @@ export default function MentorForm({onClose}:MentorFormProps) {
     },
     validationSchema: mentorSchema,
     onSubmit: async (values, {resetForm}) => {
-      const res = await useMentorStore.getState().saveData(values);
+      try{const res = await useMentorStore.getState().saveData(values);
+      await useMentorStore.getState().getMentorData();
       onClose();
       resetForm();
-      if(res)router.push("/");
+      if(res)router.push("/");}
+      catch(err){
+        console.log(err);
+      }
     },
   });
 
@@ -79,9 +84,7 @@ export default function MentorForm({onClose}:MentorFormProps) {
           ...formik.values.languages,
           newLang,
         ]);
-        target.value = "";
-        console.log(formik.values.languages);
-        
+        target.value = "";       
       }
     }
   };
