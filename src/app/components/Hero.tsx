@@ -24,7 +24,7 @@ const Hero = () => {
                 Find a Mentor
               </button>
               <Link
-                href="/mentorsOnboarding"
+                href="/become-a-mentor"
                 className="btn md:w-[250px] px-12 py-2 "
               >
                 Become a Mentor

@@ -1,4 +1,4 @@
-import MentorSocials from "@/app/(landing)/mentors/components/MentorSocials";
+import MentorSocials from "@/app/(mentor)/mentors/components/MentorSocials";
 import React from "react";
 
 const MentorViewLeftPanel = ({ firstName, lastName, shortHeading, experience, socials }: Mentor) => {

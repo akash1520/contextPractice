@@ -14,6 +14,7 @@ import { auth, db } from "@/firebase";
 import { FirebaseError } from "firebase/app";
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -33,6 +34,7 @@ type SignupWithEPFunction = (data: signupUser) => Promise<boolean>;
 type GetCurrentUserFunction = () => Promise<void>;
 type GetCurrentUserDataFunction = () => void;
 type CheckUsernameAvailabilityFunction = (username: string) => Promise<boolean>;
+type DestroyUserDataFunction = () => Promise<boolean>;
 
 // Enumeration for different login providers
 enum selectPro {
@@ -52,6 +54,7 @@ interface AuthStore {
   isLoading: boolean;
   getCurrentUser: GetCurrentUserFunction;
   getCurrentUserData: GetCurrentUserDataFunction;
+  destroyUserData: DestroyUserDataFunction;
   checkUsernameAvailability: CheckUsernameAvailabilityFunction;
 }
 
@@ -173,7 +176,8 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
     try {
       set(() => ({ isLoading: true }));
 
-      const { email, password, firstName, lastName, username, age, gender } = data;
+      const { email, password, firstName, lastName, username, age, gender } =
+        data;
 
       // Create user using Firebase Auth
       await createUserWithEmailAndPassword(auth, email, password);
@@ -271,6 +275,23 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
     } catch (error) {
       console.error("Error checking username availability:", error);
       throw error;
+    }
+  },
+  destroyUserData: async () => {
+    try {
+      const uid = get().user?.uid;
+      if (uid) {
+        const userRef = doc(db, "Users", uid);
+        await deleteDoc(userRef); // This will delete the document from Firestore
+
+        set(() => ({ userData: null })); // This will clear the local userData
+        return true;
+      }
+      return false; // Return false if uid does not exist
+    } catch (err) {
+      const error = err as Error;
+      console.error(error.message);
+      return false;
     }
   },
 }));

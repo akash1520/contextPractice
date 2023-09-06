@@ -23,14 +23,11 @@ const Mentor = () => {
                 insights, expertise, and stories from your own career journey.
               </Balancer>
             </p>
-
             <div className="flex items-center mt-10 mb-4 gap-4">
-              <Link href="/mentorsOnboarding" className="btn bg-[#feec01]">
+              <Link href="/become-a-mentor" className="btn bg-[#feec01]">
                 Apply Now <ArrowForwardIosIcon fontSize="small" />
               </Link>
-              <button className="btn">
-                Learn More
-              </button>
+              <button className="btn">Learn More</button>
             </div>
           </div>
           {/* right side */}
