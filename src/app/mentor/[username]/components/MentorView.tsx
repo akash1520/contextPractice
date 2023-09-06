@@ -1,4 +1,6 @@
 import React from "react";
+import MentorViewRightPanel from "./MentorViewRightPanel";
+import MentorViewLeftPanel from "./MentorViewLeftPanel";
 
 type MentorViewProps = {
   mentor: Mentor;
@@ -6,16 +8,14 @@ type MentorViewProps = {
 
 const MentorView = ({ mentor }: MentorViewProps) => {
   return (
-    <div>
-      <h2>Mentor Profile</h2>
-
-      <ul>
-        {Object.keys(mentor).map((key) => (
-          <li key={key}>
-            {key}: {mentor[key as keyof Mentor]}
-          </li>
-        ))}
-      </ul>
+    <div className="bg-[#fefffe]">
+      <div className="w-full h-48 bg-gray-400"></div>
+      <div className="max-w-7xl mx-auto">
+        <div className="flex gap-8">
+          <MentorViewLeftPanel {...mentor} />
+          <MentorViewRightPanel />
+        </div>
+      </div>
     </div>
   );
 };

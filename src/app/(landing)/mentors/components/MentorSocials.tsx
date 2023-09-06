@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -14,12 +14,14 @@ const getSocialIcon = (socialUrl: string) => {
 
 const MentorSocials = ({ socials }: { socials: string[] }) => {
   return (
-    <div className="flex gap-1">
-      {socials.map((social, index) => (
-        <a href={social} key={index}>
-          {getSocialIcon(social)}
-        </a>
-      ))}
+    <div className="flex gap-2">
+      <span onClick={(e) => e.stopPropagation()}>
+        {socials.map((social, index) => (
+          <a href={social} key={index}>
+            {getSocialIcon(social)}
+          </a>
+        ))}
+      </span>
     </div>
   );
 };
