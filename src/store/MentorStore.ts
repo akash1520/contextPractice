@@ -11,6 +11,7 @@ interface Mentor {
   gender: string;
   age: string;
   about?: string;
+  mobile?: string;
   organization: string;
   role: string;
   experience: number;
@@ -22,6 +23,7 @@ interface Mentor {
 interface MentorData {
   username: string;
   shortHeading: string;
+  mobile: string;
   gender: string;
   age: string;
   about: string;

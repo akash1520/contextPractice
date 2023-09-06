@@ -13,6 +13,12 @@ export const mentorSchema = Yup.object({
     .integer("Age must be an integer")
     .required("Age is required"),
   about: Yup.string(), // Optional, so no required() here
+  mobile: Yup.string()
+  .matches(
+    /^(\+?\d{1,4}?[-.\s]?)?(\(?(\d{1,3})?\)?[-.\s]?)?(\d{1,4}?[-.\s]?)*\d{4}(([-.\s]?(x|ext|extension)\d{1,5})?)$/, 
+    'Invalid mobile number'
+  )
+  .nullable(),
   organization: Yup.string().required("Organization is required"),
   role: Yup.string().required("Role is required"),
   experience: Yup.number()

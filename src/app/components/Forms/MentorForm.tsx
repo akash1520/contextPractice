@@ -7,18 +7,21 @@ import * as Yup from "yup";
 import MentorFormSelect from "./MentorFormSelect";
 import { useMentorStore } from "@/store/MentorStore";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/AuthStore";
 
-interface MentorFormProps{
-  onClose: VoidFunction
+interface MentorFormProps {
+  onClose: VoidFunction;
 }
 
-export default function MentorForm({onClose}:MentorFormProps) {
+export default function MentorForm({ onClose }: MentorFormProps) {
   const [socialsError, setSocialsError] = React.useState<string | null>(null);
+  const defaultUsername = useAuthStore.getState().userData?.username || "";
 
-  const router = useRouter()
+
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      username: "",
+      username: defaultUsername,
       shortHeading: "",
       gender: "",
       age: "",
@@ -26,17 +29,18 @@ export default function MentorForm({onClose}:MentorFormProps) {
       organization: "",
       role: "",
       experience: 0,
+      mobile: "",
       languages: [],
       socials: [],
     },
     validationSchema: mentorSchema,
-    onSubmit: async (values, {resetForm}) => {
-      try{const res = await useMentorStore.getState().saveData(values);
-      await useMentorStore.getState().getMentorData();
-      onClose();
-      resetForm();
-      if(res)router.push("/");}
-      catch(err){
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        const res = await useMentorStore.getState().saveData(values);
+        onClose();
+        resetForm();
+        if (res) router.push("/");
+      } catch (err) {
         console.log(err);
       }
     },
@@ -78,17 +82,17 @@ export default function MentorForm({onClose}:MentorFormProps) {
       event.preventDefault();
       const target = event.target as HTMLInputElement;
       const newLang = target.value.trim();
-  
-      if (newLang) { // Ensure the new language is not empty
+
+      if (newLang) {
+        // Ensure the new language is not empty
         formik.setFieldValue("languages", [
           ...formik.values.languages,
           newLang,
         ]);
-        target.value = "";       
+        target.value = "";
       }
     }
   };
-  
 
   return (
     <div className="mt-2 text-center">
@@ -146,6 +150,17 @@ export default function MentorForm({onClose}:MentorFormProps) {
             onChange={formik.handleChange}
             errorCondition={formik.touched.age && Boolean(formik.errors.age)}
             errorMessage={formik.touched.age && formik.errors.age}
+          />
+          <MentorFormInput
+            label="Mobile Number"
+            id="mobile"
+            name="mobile"
+            value={formik.values.mobile}
+            onChange={formik.handleChange}
+            errorCondition={
+              formik.touched.mobile && Boolean(formik.errors.mobile)
+            }
+            errorMessage={formik.touched.mobile && formik.errors.mobile}
           />
         </div>
         <div>
