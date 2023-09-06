@@ -2,7 +2,7 @@ import React from "react";
 import AuthFormLabel from "./MentorFormLabel";
 import AuthFormErr from "./MentorFormErr";
 import { CircularProgress } from "@mui/material";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from "@mui/icons-material/Check";
 
 interface MentorFormInputProps {
   label: string;
@@ -19,7 +19,6 @@ interface MentorFormInputProps {
   loadingFeedback?: boolean;
   [key: string]: any;
 }
-
 
 const AuthFormInput: React.FC<MentorFormInputProps> = ({
   label,

@@ -1,16 +1,11 @@
-"use client"
-import React, { Fragment, useState } from "react";
+import React from "react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Image from "next/image";
 import { Balancer } from "react-wrap-balancer";
 import Link from "next/link";
-import Modal from "./Modals/Modal";
-import MentorForm from "./Forms/MentorForm";
 
 const Mentor = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
-    <Fragment>
     <div className="max-w-7xl mx-auto">
       <div className="py-20 px-5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 justify-center max-w-5xl mx-auto">
@@ -29,12 +24,10 @@ const Mentor = () => {
               </Balancer>
             </p>
             <div className="flex items-center mt-10 mb-4 gap-4">
-              <button onClick={()=>setIsOpen(true)} className="btn bg-[#feec01]">
+              <Link href="/become-a-mentor" className="btn bg-[#feec01]">
                 Apply Now <ArrowForwardIosIcon fontSize="small" />
-              </button>
-              <button className="btn">
-                Learn More
-              </button>
+              </Link>
+              <button className="btn">Learn More</button>
             </div>
           </div>
           {/* right side */}
@@ -51,10 +44,6 @@ const Mentor = () => {
         </div>
       </div>
     </div>
-    <Modal isOpen={isOpen} onClose={()=>setIsOpen(false)}>
-      <MentorForm onClose={()=>setIsOpen(false)}/>
-    </Modal>
-    </Fragment>
   );
 };
 

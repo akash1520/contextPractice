@@ -68,7 +68,9 @@ export const useMentorStore = create<MentorStore>((set: CustomSetState, get: Cus
           mentorId: docRef.id,
           mentor: updatedMentorData
         }));
-        await authState.destroyUserData();
+
+        // TODO: delete from user only when mentor is verified by admin
+        // await authState.destroyUserData();
       } catch (innerErr) {
         const err = innerErr as Error;
         console.error(err.message);

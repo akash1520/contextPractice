@@ -2,7 +2,7 @@ import React from "react";
 import MentorFormLabel from "./MentorFormLabel";
 import MentorFormErr from "./MentorFormErr";
 import { CircularProgress } from "@mui/material";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from "@mui/icons-material/Check";
 
 interface SocialsInputProps {
   label: string;
@@ -19,6 +19,7 @@ interface SocialsInputProps {
   loading?: boolean;
   loadingFeedback?: boolean;
   manualError?: string | null;
+  [key: string]: any;
 }
 
 const SocialsInput: React.FC<SocialsInputProps> = ({
@@ -35,11 +36,9 @@ const SocialsInput: React.FC<SocialsInputProps> = ({
   loader = false,
   loading,
   loadingFeedback,
-  manualError
+  manualError,
+  ...props
 }) => {
-
-       
-
   return (
     <div className="flex flex-col relative">
       <MentorFormLabel htmlFor={id} label={label} required={required} />
@@ -47,11 +46,11 @@ const SocialsInput: React.FC<SocialsInputProps> = ({
         required
         id={id}
         name={name}
-        placeholder="Add a social link and press Enter"
         onKeyPress={handleKeyPress}
         className={`${
           errorCondition ? "mb-2" : "mb-6"
         } px-4 py-2 bg-[#191817] text-[#fefffe] rounded-lg focus:outline-none border-2 border-[#1f1f1f] focus:border-[#fefffe] w-full ${className}`}
+        {...props}
       />
       <ul className="list-disc ml-5">
         {value.map((social, index) => (
@@ -69,7 +68,12 @@ const SocialsInput: React.FC<SocialsInputProps> = ({
         </div>
       )}
 
-      {errorCondition && (errorMessage || manualError) && (<MentorFormErr condition={errorCondition} message={manualError||errorMessage} />)}
+      {errorCondition && (errorMessage || manualError) && (
+        <MentorFormErr
+          condition={errorCondition}
+          message={manualError || errorMessage}
+        />
+      )}
     </div>
   );
 };
