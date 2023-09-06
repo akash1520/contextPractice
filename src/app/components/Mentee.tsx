@@ -2,12 +2,12 @@ import React from "react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Balancer } from "react-wrap-balancer";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 const Mentee = () => {
-
   const DynamicVideoComponent = dynamic(
-    () => import('../components/VideoComponent'),
-    { ssr: false }  // This will only render the component on client-side
+    () => import("../components/VideoComponent"),
+    { ssr: false } // This will only render the component on client-side
   );
 
   return (
@@ -16,7 +16,7 @@ const Mentee = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 justify-center max-w-5xl mx-auto">
           {/* left side */}
           <div className="flex justify-center items-center relative rounded-3xl overflow-hidden min-h-[300px]">
-           <DynamicVideoComponent/>
+            <DynamicVideoComponent />
           </div>
           {/* right side */}
           <div className="flex flex-col justify-center">
@@ -35,9 +35,9 @@ const Mentee = () => {
             </p>
 
             <div className="flex flex-col md:flex-row items-start md:items-center mt-10 mb-4 gap-4">
-              <button className="btn bg-[#feec01]">
+              <Link href="/mentors" className="btn bg-[#feec01]">
                 Find a Mentor <ArrowForwardIosIcon fontSize="small" />
-              </button>
+              </Link>
             </div>
           </div>
         </div>

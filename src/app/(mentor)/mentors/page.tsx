@@ -42,12 +42,6 @@ const MentorsPage = async () => {
           {mentors.map((mentor, index) => (
             <MentorCard mentor={mentor} key={index} />
           ))}
-          {mentors.map((mentor, index) => (
-            <MentorCard mentor={mentor} key={index} />
-          ))}
-          {mentors.map((mentor, index) => (
-            <MentorCard mentor={mentor} key={index} />
-          ))}
         </div>
       </div>
     </div>
