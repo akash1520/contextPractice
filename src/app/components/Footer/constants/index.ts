@@ -2,7 +2,7 @@ export const footerLinksData = [
   {
     title: "Mentorship",
     links: [
-      { title: "Be a Mentor", link: "/mentorsOnboarding" },
+      { title: "Be a Mentor", link: "/become-a-mentor" },
       { title: "Explore Mentors", link: "/" },
       { title: "Mentorship FAQs", link: "/" },
     ],

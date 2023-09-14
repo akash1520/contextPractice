@@ -22,10 +22,10 @@ const sessionData = [
 const MentorViewRightPanel = () => {
   return (
     <div className="w-[30%] mt-8">
-      <h3 className="text-3xl font-bold font-gothic tracking-wider">
+      <h3 className="text-3xl font-bold font-gothic tracking-wider mb-2">
         Sessions
       </h3>
-      <div className="flex flex-col gap-4 mb-2">
+      <div className="flex flex-col gap-4">
         {sessionData.map((session, index) => (
           <SessionCard key={index} {...session} />
         ))}

@@ -51,7 +51,7 @@ const Navbar = () => {
           <div className="hidden md:flex space-x-4 items-center text[#191817] font-medium text-sm">
             <Link href="/">HOME</Link>
             <Link href="/mentors">MENTOR</Link>
-            <Link href="/mentorsOnboarding">CONTACT</Link>
+            <Link href="/">CONTACT</Link>
             {user ? (
               <NavbarMenu />
             ) : (
