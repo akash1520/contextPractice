@@ -37,7 +37,10 @@ const getMentorData = async (username: string) => {
     return undefined;
   }
 
-  const mentor = querySnapshot.docs[0].data() as Mentor;
+  const mentor = {
+    ...querySnapshot.docs[0].data(),
+    id: querySnapshot.docs[0].id,
+  } as MentorWithId;
 
   return mentor;
 };

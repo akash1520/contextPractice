@@ -1,9 +1,13 @@
 import React from "react";
 import MentorSocials from "./MentorSocials";
+import Link from "next/link";
 
 const MentorCard = ({ mentor }: { mentor: Mentor }) => {
   return (
-    <div className="card flex flex-col justify-center p-6 items-center w-xs sm:w-auto">
+    <Link
+      href={`/mentor/${mentor.username}`}
+      className="card flex flex-col justify-center p-6 items-center w-xs sm:w-auto"
+    >
       <div className="relative">
         <div className="bg-gray-500 h-24 w-24 md:h-36 md:w-36 rounded-full"></div>
       </div>
@@ -20,7 +24,7 @@ const MentorCard = ({ mentor }: { mentor: Mentor }) => {
           <button className="btn px-4 py-1 bg-[#feec01]">Book Session</button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

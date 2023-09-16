@@ -12,3 +12,7 @@ interface Mentor {
   languages: string[];
   socials: string[];
 }
+
+interface MentorWithId extends Mentor {
+  readonly id: string;
+}
