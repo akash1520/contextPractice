@@ -12,7 +12,7 @@ const MentorViewLeftPanel = ({
   languages,
 }: Mentor) => {
   return (
-    <div className="flex-1">
+    <div className="md:flex-1">
       <div className="px-4 pb-4 flex flex-col w-full rounded-2xl rounded-t-none shadow-md border-x-2 border-b-4 border-black text-[#191817] mb-6">
         <div className="w-32 h-32 bg-slate-200 rounded-full border-4 border-white translate-y-[-50%]" />
         <div className="-mt-12 flex flex-col">

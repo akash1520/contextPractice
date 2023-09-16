@@ -1,35 +1,45 @@
 import React from "react";
 import SessionCard from "./SessionCard";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "@/firebase";
 
-const sessionData = [
-  {
-    title: "[50% OFF] Tech: Resume review",
-    price: 100,
-    duration: 45,
-  },
-  {
-    title: "[50% OFF] General Q&A",
-    price: 100,
-    duration: 30,
-  },
-  {
-    title: "[50% OFF] Tech: Excelling as a developer",
-    price: 100,
-    duration: 30,
-  },
-];
+interface Session {
+  title: string;
+  price: number;
+  duration: number;
+}
 
-const MentorViewRightPanel = () => {
+const fetchSessionData = async (mentorId: string) => {
+  const sessionsCollectionRef = collection(db, "Sessions");
+  const q = query(sessionsCollectionRef, where("mentorId", "==", mentorId));
+  const querySnapshot = await getDocs(q);
+
+  if (querySnapshot.empty) {
+    return [];
+  }
+
+  const sessions = querySnapshot.docs.map((doc) => doc.data());
+
+  return sessions;
+};
+
+const MentorViewRightPanel = async ({ mentorId }: { mentorId: string }) => {
+  const sessions = (await fetchSessionData(mentorId)) as Session[];
+
   return (
-    <div className="w-[30%] mt-8">
+    <div className="w-full md:w-[30%] mt-8">
       <h3 className="text-3xl font-bold font-gothic tracking-wider mb-2">
         Sessions
       </h3>
-      <div className="flex flex-col gap-4">
-        {sessionData.map((session, index) => (
-          <SessionCard key={index} {...session} />
-        ))}
-      </div>
+      {sessions.length > 0 ? (
+        <div className="flex flex-col gap-4 w-full">
+          {sessions.map((session, index) => (
+            <SessionCard key={index} {...session} />
+          ))}
+        </div>
+      ) : (
+        <span className="text-xl font-semibold">No sessions are available currently</span>
+      )}
     </div>
   );
 };
