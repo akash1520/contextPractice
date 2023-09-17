@@ -57,7 +57,13 @@ const NavbarMenu = () => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         className="mt-2"
       >
-        <Link href={`/u/${userData?.username}`}>
+        <Link
+          href={
+            userData?.role === "user"
+              ? `/u/${userData?.username}`
+              : `/mentor/${userData?.username}`
+          }
+        >
           <MenuItem>
             <ListItemIcon>
               <PersonIcon fontSize="small" />

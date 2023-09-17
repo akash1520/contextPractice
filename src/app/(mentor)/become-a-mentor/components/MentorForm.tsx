@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import MentorFormInput from "./MentorFormInput";
 import { mentorSchema } from "../constants/schema";
@@ -16,13 +16,16 @@ interface MentorFormProps {
 }
 
 export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
-  const [socialsError, setSocialsError] = React.useState<string | null>(null);
-  const defaultUsername = useAuthStore.getState().userData?.username || "";
-
+  const [socialsError, setSocialsError] = useState<string | null>(null);
+  const [userData] = useAuthStore((state) => [state.userData]);
+  const [saveData] = useMentorStore((state) => [state.saveData]);
   const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
-      username: defaultUsername,
+      firstName: userData?.firstName || "",
+      lastName: userData?.lastName || "",
+      username: userData?.username || "",
       shortHeading: "",
       gender: "",
       age: "",
@@ -37,7 +40,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
     validationSchema: mentorSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        const res = await useMentorStore.getState().saveData(values);
+        const res = await saveData(values);
         onClose();
         resetForm();
         if (res) router.push("/");
@@ -98,6 +101,30 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
   return (
     <div className="mt-2 text-center">
       <form onSubmit={formik.handleSubmit} noValidate className="mt-1">
+        <div className="flex gap-2">
+          <MentorFormInput
+            label="First Name"
+            id="firstname"
+            name="firstName"
+            value={formik.values.firstName}
+            onChange={formik.handleChange}
+            errorCondition={
+              formik.touched.firstName && Boolean(formik.errors.firstName)
+            }
+            errorMessage={formik.touched.firstName && formik.errors.firstName}
+          />
+          <MentorFormInput
+            label="Last Name"
+            id="lastname"
+            name="lastName"
+            value={formik.values.lastName}
+            onChange={formik.handleChange}
+            errorCondition={
+              formik.touched.lastName && Boolean(formik.errors.lastName)
+            }
+            errorMessage={formik.touched.lastName && formik.errors.lastName}
+          />
+        </div>
         <MentorFormInput
           label="Username"
           id="username"
