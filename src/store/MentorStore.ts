@@ -1,7 +1,7 @@
-import { GetState, SetState, State, create, useStore } from "zustand";
+import { create, useStore } from "zustand";
 import { useAuthStore } from "./AuthStore";
 import { db } from "@/firebase";
-import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
 
 interface Mentor {
   firstName?: string;
@@ -21,6 +21,8 @@ interface Mentor {
 }
 
 interface MentorData {
+  firstName: string;
+  lastName: string;
   username: string;
   shortHeading: string;
   mobile: string;
@@ -34,7 +36,6 @@ interface MentorData {
   socials: string[];
 }
 
-
 interface MentorStore {
   mentor: Mentor | null;
   mentorId: string | null;
@@ -43,39 +44,31 @@ interface MentorStore {
   getMentorData: () => Promise<void>;
 }
 
-type CustomSetState = SetState<MentorStore>;
-type CustomGetState = GetState<MentorStore>;
-
-export const useMentorStore = create<MentorStore>((set: CustomSetState, get: CustomGetState) => ({
+export const useMentorStore = create<MentorStore>((set, get) => ({
   mentor: null,
   mentorId: null,
   isLoading: false,
   saveData: async (data: MentorData) => {
     try {
-      const authState = useAuthStore.getState();
+      const user = useAuthStore.getState().user;
+      const { uid } = user!;
   
-      await authState.getCurrentUser();
-      await authState.getCurrentUserData();
-  
-      const { userData } = authState;
-      data = { ...data, ...userData };
-  
-      const mentorRef = collection(db, "Mentors");
       try {
-        const docRef = await addDoc(mentorRef, data);
-        const updatedMentorData: Mentor = { ...data, mentorId: docRef.id };
-        set(() => ({
-          mentorId: docRef.id,
-          mentor: updatedMentorData
-        }));
+        const batch = writeBatch(db);
+        
+        // create a new mentor document with the same uid
+        const mentorRef = doc(db, "Mentors", uid);
+        batch.set(mentorRef, data)
+        
+        // delete the user document
+        const userRef = doc(db, "Users", uid);
+        batch.delete(userRef);
 
-        // TODO: delete from user only when mentor is verified by admin
-        // await authState.destroyUserData();
+        await batch.commit();
       } catch (innerErr) {
         const err = innerErr as Error;
         console.error(err.message);
       }
-      // console.log("Mentor data saved successfully");
       return true;
     } catch (err) {
       const error = err as Error;

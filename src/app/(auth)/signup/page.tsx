@@ -8,7 +8,7 @@ const SignupPage = () => {
     <>
       <div className="left md:w-7/12 w-full h-full p-6 flex flex-col items-center justify-center bg-[#191817] relative overflow-hidden overflow-y-auto">
         <div className="fixed top-0 left-0 right-0 bottom-0 z-40 h-[86px] bg-[#191817] md:w-7/12 w-full" />
-        <div className="pt-72 flex flex-col items-center z-20">
+        <div className="pt-72 flex flex-col items-center z-20 md:w-[430px] w-11/12">
           <h1 className="text-5xl text-center mt-4 pb-1 font-semibold font-gothic tracking-wide text-[#feec01]">
             Create your Mentea account!
           </h1>

@@ -45,6 +45,7 @@ enum selectPro {
 // Interface for the store state
 interface AuthStore {
   user: User | null;
+  setUser: (user: User | null) => void;
   token: string | null;
   userData: UserData | null;
   login: LoginFunction;
@@ -72,6 +73,7 @@ interface signupUser {
 // Create the Zustand store
 export const useAuthStore = create<AuthStore>()((set, get) => ({
   user: null,
+  setUser: (user) => set({ user: user }),
   token: null,
   isLoading: false,
   userData: null,
@@ -257,12 +259,24 @@ export const useAuthStore = create<AuthStore>()((set, get) => ({
       const userRef = doc(db, "Users", uid);
       const docSnap = await getDoc(userRef);
 
+      // If the logged in user is a user, then fetch its data
       if (docSnap.exists()) {
         const data = docSnap.data() as UserData;
-        set(() => ({ userData: data }));
-      } else {
-        set(() => ({ userData: null }));
+        set(() => ({ userData: { ...data, role: "user" } }));
+        return;
       }
+
+      const mentorRef = doc(db, "Mentors", uid);
+      const mentorSnap = await getDoc(mentorRef);
+
+      // If the logged in user is a mentor, then fetch its data
+      if (mentorSnap.exists()) {
+        const data = mentorSnap.data() as UserData;
+        set(() => ({ userData: { ...data, role: "mentor" } }));
+        return;
+      }
+
+      set(() => ({ userData: null }));
     }
   },
   checkUsernameAvailability: async (username: string) => {

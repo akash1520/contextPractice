@@ -26,19 +26,25 @@ const MentorFormSelect: React.FC<MentorFormSelectProps> = ({
   ...props
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <MentorFormLabel htmlFor={id} label={label} required={true} />
       <select
-      className="bg-black py-2 text-white"
+        className="bg-[#fefffe] px-4 py-2 text-[#1f1f1f] rounded-lg focus:outline-none border-2 border-[#1f1f1f] focus:border-gray-200 w-full"
         id={id}
         name={name}
         value={value}
         onChange={onChange}
         {...props}
       >
-        <option className="text-white" value="">Select Gender</option>
+        <option className="text-[#191817]" value="">
+          Select Gender
+        </option>
         {options.map((option) => (
-          <option key={option.value} className="text-white" value={option.value}>
+          <option
+            key={option.value}
+            value={option.value}
+            className="text-[#191817]"
+          >
             {option.label}
           </option>
         ))}

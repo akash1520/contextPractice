@@ -1,6 +1,8 @@
 import * as Yup from "yup";
 
 export const mentorSchema = Yup.object({
+  firstName: Yup.string().required("Required"),
+  lastName: Yup.string().required("Required"),
   username: Yup.string()
     .min(5, "Username must be at least 5 characters")
     .required("Username is required"),

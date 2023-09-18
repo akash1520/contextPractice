@@ -4,4 +4,5 @@ interface UserData {
   username: string;
   age?: string;
   gender?: string;
+  role?: string;
 }

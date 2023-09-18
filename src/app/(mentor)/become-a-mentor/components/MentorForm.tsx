@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import MentorFormInput from "./MentorFormInput";
 import { mentorSchema } from "../constants/schema";
@@ -16,13 +16,16 @@ interface MentorFormProps {
 }
 
 export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
-  const [socialsError, setSocialsError] = React.useState<string | null>(null);
-  const defaultUsername = useAuthStore.getState().userData?.username || "";
-
+  const [socialsError, setSocialsError] = useState<string | null>(null);
+  const [userData] = useAuthStore((state) => [state.userData]);
+  const [saveData] = useMentorStore((state) => [state.saveData]);
   const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
-      username: defaultUsername,
+      firstName: userData?.firstName || "",
+      lastName: userData?.lastName || "",
+      username: userData?.username || "",
       shortHeading: "",
       gender: "",
       age: "",
@@ -37,7 +40,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
     validationSchema: mentorSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        const res = await useMentorStore.getState().saveData(values);
+        const res = await saveData(values);
         onClose();
         resetForm();
         if (res) router.push("/");
@@ -95,9 +98,68 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
     }
   };
 
+  const handleLanguageRemove = (indexToRemove: number): void => {
+    formik.setFieldValue(
+      "languages",
+      formik.values.languages.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
+  const handleSocialsRemove = (indexToRemove: number): void => {
+    formik.setFieldValue(
+      "socials",
+      formik.values.socials.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
+  useEffect(() => {
+    if (
+      userData &&
+      (formik.values.firstName === "" ||
+        formik.values.lastName === "" ||
+        formik.values.username === "")
+    ) {
+      formik.setFieldValue("firstName", userData.firstName);
+      formik.setFieldValue("lastName", userData.lastName);
+      formik.setFieldValue("username", userData.username);
+    }
+  }, [userData, formik]);
+
+  console.log(userData)
+
   return (
     <div className="mt-2 text-center">
-      <form onSubmit={formik.handleSubmit} noValidate className="mt-1">
+      <form
+        onSubmit={formik.handleSubmit}
+        noValidate
+        className="mt-1 max-w-4xl mx-auto border border-gray-300 rounded-lg px-3 py-4"
+      >
+        <div className="flex gap-2 w-full">
+          <MentorFormInput
+            label="First Name"
+            id="firstname"
+            name="firstName"
+            value={formik.values.firstName}
+            onChange={formik.handleChange}
+            errorCondition={
+              formik.touched.firstName && Boolean(formik.errors.firstName)
+            }
+            errorMessage={formik.touched.firstName && formik.errors.firstName}
+            required={true}
+          />
+          <MentorFormInput
+            label="Last Name"
+            id="lastname"
+            name="lastName"
+            value={formik.values.lastName}
+            onChange={formik.handleChange}
+            errorCondition={
+              formik.touched.lastName && Boolean(formik.errors.lastName)
+            }
+            errorMessage={formik.touched.lastName && formik.errors.lastName}
+            required={true}
+          />
+        </div>
         <MentorFormInput
           label="Username"
           id="username"
@@ -108,6 +170,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
             formik.touched.username && Boolean(formik.errors.username)
           }
           errorMessage={formik.touched.username && formik.errors.username}
+          required={true}
         />
         <MentorFormInput
           label="Short Heading"
@@ -121,8 +184,9 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
           errorMessage={
             formik.touched.shortHeading && formik.errors.shortHeading
           }
+          required={true}
         />
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 w-full">
           <MentorFormSelect
             label="Gender"
             id="gender"
@@ -147,6 +211,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
             onChange={formik.handleChange}
             errorCondition={formik.touched.age && Boolean(formik.errors.age)}
             errorMessage={formik.touched.age && formik.errors.age}
+            required={true}
           />
           <MentorFormInput
             label="Mobile Number"
@@ -182,6 +247,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
             errorMessage={
               formik.touched.organization && formik.errors.organization
             }
+            required={true}
           />
 
           <MentorFormInput
@@ -192,6 +258,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
             onChange={formik.handleChange}
             errorCondition={formik.touched.role && Boolean(formik.errors.role)}
             errorMessage={formik.touched.role && formik.errors.role}
+            required={true}
           />
         </div>
         <MentorFormInput
@@ -204,6 +271,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
             formik.touched.experience && Boolean(formik.errors.experience)
           }
           errorMessage={formik.touched.experience && formik.errors.experience}
+          required={true}
         />
 
         <SocialsInput
@@ -214,6 +282,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
           value={formik.values.languages}
           onChange={formik.handleChange}
           handleKeyPress={handleLanguagesPress}
+          remove={handleLanguageRemove}
           errorCondition={
             formik.touched.languages && Boolean(formik.errors.languages)
           }
@@ -234,6 +303,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
           placeholder="Add a social link and press Enter"
           value={formik.values.socials}
           handleKeyPress={handleSocialsKeyPress}
+          remove={handleSocialsRemove}
           errorCondition={
             formik.touched.socials && Boolean(formik.errors.socials)
           }
