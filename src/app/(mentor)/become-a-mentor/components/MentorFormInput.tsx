@@ -36,7 +36,7 @@ const AuthFormInput: React.FC<MentorFormInputProps> = ({
   ...props
 }) => {
   return (
-    <div className="flex flex-col relative">
+    <div className="flex flex-col relative w-full">
       <AuthFormLabel htmlFor={id} label={label} required={required} />
       <input
         required
@@ -46,7 +46,7 @@ const AuthFormInput: React.FC<MentorFormInputProps> = ({
         onChange={onChange}
         className={`${
           errorCondition ? "mb-2" : "mb-6"
-        } px-4 py-2 bg-[#191817] text-[#fefffe] rounded-lg focus:outline-none border-2 border-[#1f1f1f] focus:border-[#fefffe] w-full ${className}`}
+        } px-4 py-2 text-[#1f1f1f] rounded-lg focus:outline-none border-2 border-[#1f1f1f] focus:border-gray-200 w-full ${className}`}
         {...props}
       />
       {/* loader prop for availabilty of loader and loading is loader condition */}
