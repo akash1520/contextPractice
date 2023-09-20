@@ -15,6 +15,7 @@ import {
   ref,
   uploadBytesResumable,
   getDownloadURL } from "@/firebase";
+import Image from "next/image";
 
 interface MentorFormProps {
   onClose?: VoidFunction;
@@ -25,7 +26,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
   const [userData] = useAuthStore((state) => [state.userData]);
   const [saveData, checkUsernameAvailability] = useMentorStore((state) => [state.saveData, state.checkUsernameAvailability]);
   const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
-  const [usernameAvailable, setUsernameAvailable] = React.useState<Boolean>(false);
+  const [isProfileImgAvailable, setProfileImgAvailable] = React.useState<boolean>(false);
 
   const router = useRouter();
 
@@ -64,6 +65,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             console.log("Image uploaded successfully:", downloadURL);
             formik.setFieldValue("profileImgUrl", downloadURL);
+            setProfileImgAvailable(true);    
           });
         }
       );
@@ -167,8 +169,6 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
   const handleUsernameChange = async (e: ChangeEvent<HTMLInputElement>) => {
     formik.setFieldValue("username", e.target.value);
     const isAvailable = await checkUsernameAvailability(e.target.value);
-    setUsernameAvailable(isAvailable);    
-    
     if (!isAvailable) {
         formik.setFieldTouched("username", true, false); // set the field as touched
         formik.setFieldError("username", "Username is not available!");
@@ -389,9 +389,10 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
         <div className="my-2">
           <label
             htmlFor="image"
-            className="block text-sm font-medium text-gray-700">
+            className="block text-left text-sm font-medium text-gray-700">
             Upload Image
           </label>
+          <div className="flex flex-row justify-around">
           <input
             type="file"
             id="image"
@@ -404,10 +405,14 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
           <button
             type="button"
             onClick={uploadImageToFirebase}
-            className="btn bg-white mt-2"
+            className="btn text-center bg-white mt-2"
           >
             Upload
           </button>
+          </div>
+          <div className="flex justify-around">
+            <Image className="rounded-full" hidden={!isProfileImgAvailable} src={formik.values.profileImgUrl} height={200} width={200} alt={"Mentor's profile image"}/>
+          </div>
         </div>
 
         <div className="my-4">
