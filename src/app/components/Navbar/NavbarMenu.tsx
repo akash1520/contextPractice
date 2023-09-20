@@ -19,7 +19,8 @@ const NavbarMenu = () => {
     setAnchorEl(null);
   };
 
-  const [userData, logout] = useAuthStore((state) => [
+  const [user, userData, logout] = useAuthStore((state) => [
+    state.user,
     state.userData,
     state.logout,
   ]);
@@ -33,7 +34,7 @@ const NavbarMenu = () => {
 
   return (
     <>
-      {userData && (
+      {user && (
         <button
           className="btn ml-2 p-1.5 bg-white"
           onClick={handleClick}
@@ -42,8 +43,8 @@ const NavbarMenu = () => {
           aria-expanded={open ? "true" : undefined}
         >
           {getAvatarInitials(
-            userData?.firstName || "",
-            userData?.lastName || ""
+           user.displayName?.split(" ")[0] || "",
+           user.displayName?.split(" ")[1] || ""
           )}
         </button>
       )}

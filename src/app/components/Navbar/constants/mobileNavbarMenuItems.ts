@@ -13,15 +13,5 @@ export const mobileNavbarMenuItems = [
     title: "Contact",
     link: "/contact",
     variant: "primary",
-  },
-  {
-    title: "Signin",
-    link: "/login",
-    variant: "secondary",
-  },
-  {
-    title: "Signup",
-    link: "/signup",
-    variant: "secondary",
-  },
+  }
 ];

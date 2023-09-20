@@ -10,9 +10,10 @@ interface MobileNavbarProps {
 }
 
 const MobileNavbar = ({ handleMobileMenuToggle }: MobileNavbarProps) => {
-  const [user, userData] = useAuthStore((state) => [
+  const [user, userData, logout] = useAuthStore((state) => [
     state.user,
     state.userData,
+    state.logout
   ]);
 
   return (
@@ -30,11 +31,14 @@ const MobileNavbar = ({ handleMobileMenuToggle }: MobileNavbarProps) => {
           </div>
           {user && (
             <div className="flex gap-2">
-              <Link href={`/u/${userData?.username}`} className="btn p-1.5 bg-white">
+              <Link
+                href={`/u/${userData?.username}`}
+                className="btn p-1.5 bg-white"
+              >
                 <span>
                   {getAvatarInitials(
-                    userData?.firstName || "",
-                    userData?.lastName || ""
+                    user.displayName?.split(" ")[0] || "",
+                    user.displayName?.split(" ")[1] || ""
                   )}
                 </span>
               </Link>
@@ -47,6 +51,25 @@ const MobileNavbar = ({ handleMobileMenuToggle }: MobileNavbarProps) => {
           {mobileNavbarMenuItems.map((item) => (
             <MobileNavbarMenuItem key={item.title} {...item} />
           ))}
+
+          {!user? ( <><Link
+            href={"/login"}
+            className={
+              "btn hover:font-semibold text-[18px] cursor-pointer bg-white"
+            }
+          >
+            Signin
+          </Link>
+          <Link
+            href={"/signup"}
+            className={
+              "btn hover:font-semibold text-[18px] cursor-pointer bg-white"
+            }
+          >
+            Signup
+          </Link></>):<button onClick={logout} className={
+              "btn hover:font-semibold text-[18px] cursor-pointer bg-white"
+            }>Logout</button>}
         </div>
       </div>
     </>
