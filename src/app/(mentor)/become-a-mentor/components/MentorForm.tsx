@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState, ChangeEvent } from "react";
 import { useFormik } from "formik";
 import MentorFormInput from "./MentorFormInput";
 import { mentorSchema } from "../constants/schema";
@@ -10,6 +10,11 @@ import MentorFormSelect from "./MentorFormSelect";
 import { useMentorStore } from "@/store/MentorStore";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/AuthStore";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL } from "@/firebase";
 
 interface MentorFormProps {
   onClose?: VoidFunction;
@@ -18,8 +23,54 @@ interface MentorFormProps {
 export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
   const [socialsError, setSocialsError] = useState<string | null>(null);
   const [userData] = useAuthStore((state) => [state.userData]);
-  const [saveData] = useMentorStore((state) => [state.saveData]);
+  const [saveData, checkUsernameAvailability] = useMentorStore((state) => [state.saveData, state.checkUsernameAvailability]);
+  const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
+  const [usernameAvailable, setUsernameAvailable] = React.useState<Boolean>(false);
+
   const router = useRouter();
+
+  
+
+  const uploadImageToFirebase = async () => {
+    if (!selectedImage) return;
+
+    // Get a reference to the storage service
+    const storage = getStorage();
+
+    // Create a storage reference from our storage service
+    const storageRef = ref(
+      storage,
+      "mentorProfileImages/" + selectedImage.name
+    );
+
+    try {
+      // Upload the file to the path 'your-directory-name/selectedImage.name'
+      const uploadTask = uploadBytesResumable(storageRef, selectedImage);
+
+      // Listen for state changes, errors, and completion of the upload.
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+        },
+        (error) => {
+          console.error("Error uploading image:", error);
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log("Image uploaded successfully:", downloadURL);
+            formik.setFieldValue("profileImgUrl", downloadURL);
+          });
+        }
+      );
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -27,6 +78,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
       lastName: userData?.lastName || "",
       username: userData?.username || "",
       shortHeading: "",
+      profileImgUrl: "",
       gender: "",
       age: "",
       about: "",
@@ -112,6 +164,17 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
     );
   };
 
+  const handleUsernameChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    formik.setFieldValue("username", e.target.value);
+    const isAvailable = await checkUsernameAvailability(e.target.value);
+    setUsernameAvailable(isAvailable);    
+    
+    if (!isAvailable) {
+        formik.setFieldTouched("username", true, false); // set the field as touched
+        formik.setFieldError("username", "Username is not available!");
+    }
+}
+
   useEffect(() => {
     if (
       userData &&
@@ -125,7 +188,6 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
     }
   }, [userData, formik]);
 
-  console.log(userData)
 
   return (
     <div className="mt-2 text-center">
@@ -165,7 +227,7 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
           id="username"
           name="username"
           value={formik.values.username}
-          onChange={formik.handleChange}
+          onChange={handleUsernameChange}
           errorCondition={
             formik.touched.username && Boolean(formik.errors.username)
           }
@@ -316,6 +378,37 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
               : undefined
           }
         />
+
+        <input
+          type="hidden"
+          name="profileImgUrl"
+          value={formik.values.profileImgUrl}
+        />
+
+        {/* // Image input field */}
+        <div className="my-2">
+          <label
+            htmlFor="image"
+            className="block text-sm font-medium text-gray-700">
+            Upload Image
+          </label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            onChange={(e) =>
+              setSelectedImage(e.target.files ? e.target.files[0] : null)
+            }
+          />
+          <button
+            type="button"
+            onClick={uploadImageToFirebase}
+            className="btn bg-white mt-2"
+          >
+            Upload
+          </button>
+        </div>
 
         <div className="my-4">
           <button type="submit" className="btn bg-white w-full justify-center">

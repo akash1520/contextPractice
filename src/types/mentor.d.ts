@@ -2,6 +2,7 @@ interface Mentor {
   firstName: string;
   lastName: string;
   username: string;
+  profileImgUrl: string;
   shortHeading: string;
   gender: string;
   age: string;

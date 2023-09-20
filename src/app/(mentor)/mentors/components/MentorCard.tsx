@@ -1,6 +1,7 @@
 import React from "react";
 import MentorSocials from "./MentorSocials";
 import Link from "next/link";
+import Image from "next/image";
 
 const MentorCard = ({ mentor }: { mentor: Mentor }) => {
   return (
@@ -9,7 +10,7 @@ const MentorCard = ({ mentor }: { mentor: Mentor }) => {
       className="card flex flex-col justify-center p-6 items-center w-xs sm:w-auto"
     >
       <div className="relative">
-        <div className="bg-gray-500 h-24 w-24 md:h-36 md:w-36 rounded-full"></div>
+        <Image height={300} width={300} src={mentor.profileImgUrl} alt={`${mentor.username}'s profile picture`} className="bg-gray-500 h-24 w-24 md:h-36 md:w-36 rounded-full"/>
       </div>
       <div className="flex-1 flex flex-col justify-between w-full text-center mt-2">
         <div>

@@ -1,5 +1,6 @@
 import MentorSocials from "@/app/(mentor)/mentors/components/MentorSocials";
 import CustomIcon from "@/app/components/CustomIcon";
+import Image from "next/image";
 import React from "react";
 
 const MentorViewLeftPanel = ({
@@ -10,11 +11,12 @@ const MentorViewLeftPanel = ({
   socials,
   about,
   languages,
+  profileImgUrl,
 }: Mentor) => {
   return (
     <div className="md:flex-1">
       <div className="px-4 pb-4 flex flex-col w-full rounded-2xl rounded-t-none shadow-md border-x-2 border-b-4 border-black text-[#191817] mb-6">
-        <div className="w-32 h-32 bg-slate-200 rounded-full border-4 border-white translate-y-[-50%]" />
+        <Image width={300} height={300} alt="mentor profile image" className="w-32 h-32 bg-slate-200 rounded-full border-4 border-white translate-y-[-50%]" src={profileImgUrl} />
         <div className="-mt-12 flex flex-col">
           <span className="text-2xl font-semibold">
             {firstName} {lastName}
