@@ -7,7 +7,6 @@ import { mentorSchema } from "../constants/schema";
 import SocialsInput from "./SocialsInput";
 import * as Yup from "yup";
 import MentorFormSelect from "./MentorFormSelect";
-import { useMentorStore } from "@/store/MentorStore";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/AuthStore";
 import {
@@ -16,6 +15,7 @@ import {
   uploadBytesResumable,
   getDownloadURL } from "@/firebase";
 import Image from "next/image";
+import { useMentor } from "@/context/MentorContext";
 
 interface MentorFormProps {
   onClose?: VoidFunction;
@@ -23,8 +23,12 @@ interface MentorFormProps {
 
 export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
   const [socialsError, setSocialsError] = useState<string | null>(null);
-  const [userData] = useAuthStore((state) => [state.userData]);
-  const [saveData, checkUsernameAvailability] = useMentorStore((state) => [state.saveData, state.checkUsernameAvailability]);
+  const [userData, user] = useAuthStore((state) => [state.userData, state.user]);
+  const {
+    saveData,
+    checkUsernameAvailability,
+  } = useMentor();
+
   const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
   const [isProfileImgAvailable, setProfileImgAvailable] = React.useState<boolean>(false);
 
@@ -168,11 +172,12 @@ export default function MentorForm({ onClose = () => {} }: MentorFormProps) {
 
   const handleUsernameChange = async (e: ChangeEvent<HTMLInputElement>) => {
     formik.setFieldValue("username", e.target.value);
-    const isAvailable = await checkUsernameAvailability(e.target.value);
+    if(user) 
+    {const isAvailable = await checkUsernameAvailability(e.target.value, user?.uid);
     if (!isAvailable) {
-        formik.setFieldTouched("username", true, false); // set the field as touched
-        formik.setFieldError("username", "Username is not available!");
-    }
+      formik.setFieldTouched("username", true, false); // set the field as touched
+      formik.setFieldError("username", "Username is not available!");
+    }}
 }
 
   useEffect(() => {

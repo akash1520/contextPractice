@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import React from "react";
 import { Raleway, League_Gothic } from "next/font/google";
+import { MentorProvider } from "@/context/MentorContext";
 
 export const metadata: Metadata = {
   title: "Mentea",
@@ -27,7 +28,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${raleway.variable} ${league_gothic.variable}`}>
+      <MentorProvider>
       <body>{children}</body>
+      </MentorProvider>
     </html>
   );
 }
